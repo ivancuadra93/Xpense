@@ -1,13 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
 import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
@@ -32,6 +22,7 @@ import auth from '@react-native-firebase/auth';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
 import HomeScreen from './App/HomeScreen/HomeScreen';
 
 const Stack = createNativeStackNavigator();
@@ -42,8 +33,8 @@ const App = () => {
 
   const [userInfo, setUserInfo] = useState<User>();
   const [gettingLoginStatus, setGettingLoginStatus] = useState<boolean>(true);
-  const isDarkMode = useColorScheme() === 'dark';
 
+  const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
@@ -160,23 +151,20 @@ const App = () => {
     } else {
       return (
         <SafeAreaView style={{flex: 1}}>
-          <View style={styles.container}>
-            <Text style={styles.titleText}>
-              Example of Google Sign In in React Native
-            </Text>
+          <View style={{...styles.container, ...backgroundStyle}}>
+            <Text style={styles.titleText}>Google Sign-In</Text>
             <View style={styles.container}>
               {userInfo ? (
-                <GoogleSigninButton
-                  style={{width: 312, height: 48}}
-                  size={GoogleSigninButton.Size.Wide}
-                  color={GoogleSigninButton.Color.Light}
-                  onPress={_signOut}
-                />
+                <></>
               ) : (
                 <GoogleSigninButton
                   style={{width: 312, height: 48}}
                   size={GoogleSigninButton.Size.Wide}
-                  color={GoogleSigninButton.Color.Light}
+                  color={
+                    isDarkMode
+                      ? GoogleSigninButton.Color.Dark
+                      : GoogleSigninButton.Color.Light
+                  }
                   onPress={_signIn}
                 />
               )}
@@ -198,7 +186,7 @@ const App = () => {
           name="HomeScreen"
           component={HomeScreen}
           options={{
-            headerTitle: 'Welcome',
+            headerTitle: 'Xpense',
             headerRight: () => <Button onPress={_signOut} title="Sign Out" />,
           }}
           initialParams={{welcomeMessage: 'Hello World!'}}
@@ -211,7 +199,6 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 10,
