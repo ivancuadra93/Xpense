@@ -8,65 +8,187 @@
  * @format
  */
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
+  ActivityIndicator,
+  Alert,
   SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   useColorScheme,
   View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+  User,
+} from 'react-native-google-signin';
+import auth from '@react-native-firebase/auth';
+
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from './App/HomeScreen/HomeScreen';
 
 const Stack = createNativeStackNavigator();
 
-// const Section: React.FC<{
-//   title: string;
-// }> = ({children, title}) => {
-//   const isDarkMode = useColorScheme() === 'dark';
-//   return (
-//     <View style={styles.sectionContainer}>
-//       <Text
-//         style={[
-//           styles.sectionTitle,
-//           {
-//             color: isDarkMode ? Colors.white : Colors.black,
-//           },
-//         ]}>
-//         {title}
-//       </Text>
-//       <Text
-//         style={[
-//           styles.sectionDescription,
-//           {
-//             color: isDarkMode ? Colors.light : Colors.dark,
-//           },
-//         ]}>
-//         {children}
-//       </Text>
-//     </View>
-//   );
-// };
-
 const App = () => {
+  const [initializing, setInitializing] = useState<boolean>(true);
+  const [user, setUser] = useState();
+
+  const [userInfo, setUserInfo] = useState<User>();
+  const [gettingLoginStatus, setGettingLoginStatus] = useState<boolean>(true);
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  function onAuthStateChanged(user: any) {
+    setUser(user);
+    if (initializing) setInitializing(false);
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+
+    // Initial configuration
+    GoogleSignin.configure({
+      // Mandatory method to call before calling signIn()
+      scopes: ['https://www.googleapis.com/auth/drive.readonly'],
+      // Repleace with your webClientId
+      // Generated from Firebase console
+      webClientId:
+        '1074270359253-nhors9unr6ur2a4um66nqstened0vct4.apps.googleusercontent.com',
+    });
+    // Check if user is already signed in
+    _isSignedIn();
+
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
+  const _isSignedIn = async () => {
+    const isSignedIn = await GoogleSignin.isSignedIn();
+    if (isSignedIn) {
+      Alert.alert('User is already signed in');
+      // Set User Info if user is already signed in
+      _getCurrentUserInfo();
+    } else {
+      console.log('Please Login');
+    }
+    setGettingLoginStatus(false);
+  };
+
+  const _getCurrentUserInfo = async () => {
+    try {
+      let info: User = await GoogleSignin.signInSilently();
+      console.log('User Info --> ', info);
+      setUserInfo(info);
+    } catch (error: any) {
+      if (error.code === statusCodes.SIGN_IN_REQUIRED) {
+        Alert.alert('User has not signed in yet');
+        console.log('User has not signed in yet');
+      } else {
+        Alert.alert("Unable to get user's info");
+        console.log("Unable to get user's info");
+      }
+    }
+  };
+
+  const _signIn = async () => {
+    // It will prompt google Signin Widget
+    try {
+      await GoogleSignin.hasPlayServices({
+        // Check if device has Google Play Services installed
+        // Always resolves to true on iOS
+        showPlayServicesUpdateDialog: true,
+      });
+
+      const userInfo = await GoogleSignin.signIn();
+      const googleCredential = auth.GoogleAuthProvider.credential(
+        userInfo.idToken,
+      );
+
+      auth().signInWithCredential(googleCredential);
+
+      console.log('User Info --> ', userInfo);
+      setUserInfo(userInfo);
+    } catch (error: any) {
+      console.log('Message', JSON.stringify(error));
+
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        Alert.alert('User Cancelled the Login Flow');
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        Alert.alert('Signing In');
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        Alert.alert('Play Services Not Available or Outdated');
+      } else {
+        Alert.alert(error.message);
+      }
+    }
+  };
+
+  const _signOut = async () => {
+    setGettingLoginStatus(true);
+    // Remove user session from the device.
+    try {
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+      auth().signOut();
+
+      // Removing user Info
+      setUserInfo(undefined);
+    } catch (error) {
+      console.error(error);
+    }
+    setGettingLoginStatus(false);
+  };
+
+  if (initializing) return null;
+
+  if (!user) {
+    if (gettingLoginStatus) {
+      return (
+        <View style={styles.container}>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      );
+    } else {
+      return (
+        <SafeAreaView style={{flex: 1}}>
+          <View style={styles.container}>
+            <Text style={styles.titleText}>
+              Example of Google Sign In in React Native
+            </Text>
+            <View style={styles.container}>
+              {userInfo ? (
+                <GoogleSigninButton
+                  style={{width: 312, height: 48}}
+                  size={GoogleSigninButton.Size.Wide}
+                  color={GoogleSigninButton.Color.Light}
+                  onPress={_signOut}
+                />
+              ) : (
+                <GoogleSigninButton
+                  style={{width: 312, height: 48}}
+                  size={GoogleSigninButton.Size.Wide}
+                  color={GoogleSigninButton.Color.Light}
+                  onPress={_signIn}
+                />
+              )}
+            </View>
+            <Text style={styles.footerHeading}>
+              Google SignIn in React Native
+            </Text>
+            <Text style={styles.footerText}>www.aboutreact.com</Text>
+          </View>
+        </SafeAreaView>
+      );
+    }
+  }
 
   return (
     <NavigationContainer>
@@ -74,59 +196,50 @@ const App = () => {
         <Stack.Screen
           name="HomeScreen"
           component={HomeScreen}
-          options={{ title: 'Welcome' }}
+          options={{title: 'Welcome'}}
           initialParams={{welcomeMessage: 'Hello World!'}}
         />
       </Stack.Navigator>
     </NavigationContainer>
-
-    // <SafeAreaView style={backgroundStyle}>
-    //   <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-    //   <ScrollView
-    //     contentInsetAdjustmentBehavior="automatic"
-    //     style={backgroundStyle}>
-    //     <Header />
-    //     <View
-    //       style={{
-    //         backgroundColor: isDarkMode ? Colors.black : Colors.white,
-    //       }}>
-    //       <Section title="Step One">
-    //         Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-    //         screen and then come back to see your edits.
-    //       </Section>
-    //       <Section title="See Your Changes">
-    //         <ReloadInstructions />
-    //       </Section>
-    //       <Section title="Debug">
-    //         <DebugInstructions />
-    //       </Section>
-    //       <Section title="Learn More">
-    //         Read the docs to discover what to do next:
-    //       </Section>
-    //       <LearnMoreLinks />
-    //     </View>
-    //   </ScrollView>
-    // </SafeAreaView>
   );
 };
 
-// const styles = StyleSheet.create({
-//   sectionContainer: {
-//     marginTop: 32,
-//     paddingHorizontal: 24,
-//   },
-//   sectionTitle: {
-//     fontSize: 24,
-//     fontWeight: '600',
-//   },
-//   sectionDescription: {
-//     marginTop: 8,
-//     fontSize: 18,
-//     fontWeight: '400',
-//   },
-//   highlight: {
-//     fontWeight: '700',
-//   },
-// });
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+  },
+  titleText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    padding: 20,
+  },
+  imageStyle: {
+    width: 200,
+    height: 300,
+    resizeMode: 'contain',
+  },
+  buttonStyle: {
+    alignItems: 'center',
+    backgroundColor: '#DDDDDD',
+    padding: 10,
+    width: 300,
+    marginTop: 30,
+  },
+  footerHeading: {
+    fontSize: 18,
+    textAlign: 'center',
+    color: 'grey',
+  },
+  footerText: {
+    fontSize: 16,
+    textAlign: 'center',
+    color: 'grey',
+  },
+});
 
 export default App;

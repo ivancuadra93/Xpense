@@ -1,0 +1,6 @@
+{
+    "prettier.configPath": "C:\\Users\\elect\\Documents\\Mobile Apps\\Xpense\\.prettierrc.js",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true
+}

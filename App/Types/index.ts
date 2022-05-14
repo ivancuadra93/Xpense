@@ -1,5 +1,5 @@
 export type StackParamsList = {
-    HomeScreen: {
-        welcomeMessage: string
-    }
-}
+  HomeScreen: {
+    welcomeMessage: string;
+  };
+};
