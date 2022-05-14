@@ -12,6 +12,7 @@ import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   Alert,
+  Button,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -135,9 +136,9 @@ const App = () => {
     setGettingLoginStatus(true);
     // Remove user session from the device.
     try {
+      auth().signOut();
       await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
-      auth().signOut();
 
       // Removing user Info
       setUserInfo(undefined);
@@ -196,7 +197,10 @@ const App = () => {
         <Stack.Screen
           name="HomeScreen"
           component={HomeScreen}
-          options={{title: 'Welcome'}}
+          options={{
+            headerTitle: 'Welcome',
+            headerRight: () => <Button onPress={_signOut} title="Sign Out" />,
+          }}
           initialParams={{welcomeMessage: 'Hello World!'}}
         />
       </Stack.Navigator>
