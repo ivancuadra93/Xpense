@@ -22,16 +22,16 @@ import {Expense, StackParamsList} from '../Types';
 type Props = NativeStackScreenProps<StackParamsList, 'HomeScreen'>;
 
 const HomeScreen: React.FC<Props> = ({navigation, route}) => {
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [listData, setListData] = useState<Expense[]>([
-    {
-      id: Math.random().toString(12).substring(0),
-      category: 'Category',
-      amount: '0',
-    },
-  ]);
+  // const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [listData, setListData] = useState<Expense[]>();
   const [categoryInput, setCategoryInput] = useState<string>('');
   const [amountInput, setAmountInput] = useState<string>('');
+  const [categoryInputBorder, setCategoryInputBorder] = useState<{
+    borderWidth: number;
+  }>({borderWidth: 0.5});
+  const [amountInputBorder, setAmountInputBorder] = useState<{
+    borderWidth: number;
+  }>({borderWidth: 0.5});
 
   const isDarkMode = useColorScheme() === 'dark';
   const themeBackgroundColor = {
@@ -73,7 +73,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
     amount: data[index].amount,
   });
 
-  const getItemCount = (data: Expense[]) => data.length;
+  const getItemCount = (data: Expense[]) => (data ? data.length : 0);
 
   const Item = ({category, amount}: Expense) => (
     <Shadow
@@ -89,25 +89,56 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
       </View>
     </Shadow>
   );
-
   const renderItem = ({item}: any) => (
     <Item category={item.category} id={item.id} amount={item.amount} />
   );
 
+  const EmtpyItem = () => (
+    <Shadow
+      distance={5}
+      startColor={'#b5b5b5'}
+      radius={8}
+      viewStyle={{width: '100%'}}
+      containerViewStyle={styles.shadowContainer}>
+      <View style={styles.listItem}>
+        <Text style={[styles.itemText, themeColor]}>
+          Enter a new expense below...
+        </Text>
+      </View>
+    </Shadow>
+  );
+
+  const renderEmptyItem = () => <EmtpyItem></EmtpyItem>;
+
   function createExpense(newCategory: string, newAmount: string) {
+    const amountRegex = new RegExp(
+      '(?=.*?\\d)^\\$?(([1-9]\\d{0,2}(,\\d{3})*)|\\d+)?(\\.\\d{1,2})?$',
+      'gm',
+    );
+
+    if (newCategory.length === 0) {
+      return Alert.alert('Category may not be empty');
+    }
+
+    if (!amountRegex.test(newAmount)) {
+      return Alert.alert('Please enter a valid amount');
+    }
+
     setListData(prev => [
-      ...prev,
+      ...(prev ?? []),
       {
         id: Math.random().toString(12).substring(0),
         category: newCategory,
         amount: newAmount,
       },
     ]);
+    setCategoryInput('');
+    setAmountInput('');
   }
 
   return (
     <View style={[styles.container, themeBackgroundColor]}>
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.listContainer}>
         <VirtualizedList
           data={listData}
           initialNumToRender={0}
@@ -115,6 +146,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
           keyExtractor={item => item.id}
           getItemCount={getItemCount}
           getItem={getItem}
+          ListEmptyComponent={renderEmptyItem}
         />
       </SafeAreaView>
       <View style={styles.newExpenseView}>
@@ -131,20 +163,24 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
           </View>
           <View style={styles.newExpenseInputsView}>
             <TextInput
-              style={styles.newExpenseInput}
+              style={[styles.newExpenseInput, categoryInputBorder]}
               onChangeText={setCategoryInput}
               value={categoryInput}
               placeholder="Category"
               placeholderTextColor={themeColor.color}
               keyboardType="default"
+              onFocus={() => setCategoryInputBorder({borderWidth: 1})}
+              onBlur={() => setCategoryInputBorder({borderWidth: 0.5})}
             />
             <TextInput
-              style={styles.newExpenseInput}
+              style={[styles.newExpenseInput, amountInputBorder]}
               onChangeText={setAmountInput}
               value={amountInput}
               placeholder="Amount"
               placeholderTextColor={themeColor.color}
               keyboardType="numeric"
+              onFocus={() => setAmountInputBorder({borderWidth: 1})}
+              onBlur={() => setAmountInputBorder({borderWidth: 0.5})}
             />
             <DropShadow style={styles.shadowProp}>
               <Pressable
@@ -162,7 +198,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
   );
 };
 
-const styles = StyleSheet.create({
+let styles = StyleSheet.create({
   container: {flex: 1},
   shadowContainer: {
     marginHorizontal: 10,
@@ -212,7 +248,6 @@ const styles = StyleSheet.create({
     height: 40,
     width: '33%',
     paddingLeft: 10,
-    borderWidth: 1,
   },
   newExpenseSubmitPressable: {
     height: 40,
