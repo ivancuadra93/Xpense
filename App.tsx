@@ -35,8 +35,11 @@ const App = () => {
   const [gettingLoginStatus, setGettingLoginStatus] = useState<boolean>(true);
 
   const isDarkMode = useColorScheme() === 'dark';
-  const backgroundStyle = {
+  const themeBackgroundColor = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  };
+  const themeColor = {
+    color: isDarkMode ? 'white' : 'black',
   };
 
   function onAuthStateChanged(user: any) {
@@ -151,7 +154,7 @@ const App = () => {
     } else {
       return (
         <SafeAreaView style={{flex: 1}}>
-          <View style={{...styles.container, ...backgroundStyle}}>
+          <View style={{...styles.container, ...themeBackgroundColor}}>
             <Text style={styles.titleText}>Google Sign-In</Text>
             <View style={styles.container}>
               {userInfo ? (
@@ -169,10 +172,6 @@ const App = () => {
                 />
               )}
             </View>
-            <Text style={styles.footerHeading}>
-              Google SignIn in React Native
-            </Text>
-            <Text style={styles.footerText}>www.aboutreact.com</Text>
           </View>
         </SafeAreaView>
       );
@@ -187,7 +186,11 @@ const App = () => {
           component={HomeScreen}
           options={{
             headerTitle: 'Xpense',
-            headerRight: () => <Button onPress={_signOut} title="Sign Out" />,
+            headerRight: () => (
+              <Button color={'#a5a180'} onPress={_signOut} title="Sign Out" />
+            ),
+            headerStyle: {backgroundColor: '#a49afc'},
+            headerTintColor: themeColor.color,
           }}
           initialParams={{welcomeMessage: 'Hello World!'}}
         />
@@ -213,23 +216,6 @@ const styles = StyleSheet.create({
     width: 200,
     height: 300,
     resizeMode: 'contain',
-  },
-  buttonStyle: {
-    alignItems: 'center',
-    backgroundColor: '#DDDDDD',
-    padding: 10,
-    width: 300,
-    marginTop: 30,
-  },
-  footerHeading: {
-    fontSize: 18,
-    textAlign: 'center',
-    color: 'grey',
-  },
-  footerText: {
-    fontSize: 16,
-    textAlign: 'center',
-    color: 'grey',
   },
 });
 

@@ -3,3 +3,5 @@ export type StackParamsList = {
     welcomeMessage: string;
   };
 };
+
+export type Expense = {id: string; category: string; amount: string};
