@@ -2,6 +2,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useEffect, useState} from 'react';
 import {
   Alert,
+  GestureResponderEvent,
   Modal,
   Platform,
   Pressable,
@@ -27,6 +28,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
   const [listData, setListData] = useState<Expense[]>();
   const [categoryInput, setCategoryInput] = useState<string>('');
   const [amountInput, setAmountInput] = useState<string>('');
+  const [pressed, setPressed] = useState<boolean>(false);
   const [categoryInputBorder, setCategoryInputBorder] = useState<{
     borderWidth: number;
   }>({borderWidth: 0.5});
@@ -68,6 +70,10 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
 
   generateBoxShadowStyle(-2, 4, '#171717', 0.2, 3, 4, '#171717');
 
+  const handleListPress = (_event: GestureResponderEvent) => {
+    setPressed(true);
+  };
+
   const getItem = (data: Expense[], index: number) => ({
     id: data[index].id,
     category: data[index].category,
@@ -84,11 +90,15 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
       radius={8}
       viewStyle={{width: '100%'}}
       containerViewStyle={styles.shadowContainer}>
-      <View style={styles.listItem}>
+      <Pressable
+        style={({pressed}) =>
+          pressed ? styles.listPressed : styles.listNotPressed
+        }
+        onPress={handleListPress}>
         <Text style={[styles.itemText, themeColor]}>
           {category}: {amount}
         </Text>
-      </View>
+      </Pressable>
     </Shadow>
   );
   const renderItem = ({item}: any) => (
@@ -117,7 +127,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
   );
   const renderEmptyItem = () => <EmtpyItem></EmtpyItem>;
 
-  const keyExtractor = (item: Expense, index: number) => {
+  const keyExtractor = (_item: Expense, index: number) => {
     return index.toString();
   };
 
@@ -137,14 +147,6 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
 
     const id = Math.random().toString(12).substring(0);
 
-    const expense: Expense = {
-      category: newCategory,
-      amount: newAmount,
-      id: id,
-      debitCharges: [],
-      creditCharges: [],
-    };
-
     const firestoreExpense: FirestoreExpense = {
       category: newCategory,
       amount: newAmount,
@@ -162,8 +164,6 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
         console.error(err);
         Alert.alert('An error occurred');
       });
-
-    // setListData(prev => [...(prev ?? []), expense]);
   }
 
   useEffect(() => {
@@ -242,6 +242,12 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
   );
 };
 
+const listHeight = 40;
+const offWhitie = '#e5e3f3';
+const lightGray = '#b5b5b5';
+const darkGray = '#5c5a5b';
+const purple = '#a49afc';
+
 let styles = StyleSheet.create({
   container: {flex: 1},
   shadowContainer: {
@@ -253,7 +259,20 @@ let styles = StyleSheet.create({
     marginTop: StatusBar.currentHeight,
   },
   listItem: {
-    height: 40,
+    height: listHeight,
+    justifyContent: 'center',
+    borderRadius: 8,
+    paddingLeft: 8,
+  },
+  listPressed: {
+    height: listHeight,
+    justifyContent: 'center',
+    borderRadius: 8,
+    paddingLeft: 8,
+    backgroundColor: lightGray,
+  },
+  listNotPressed: {
+    height: listHeight,
     justifyContent: 'center',
     borderRadius: 8,
     paddingLeft: 8,
