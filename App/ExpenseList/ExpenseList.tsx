@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   GestureResponderEvent,
   Pressable,
@@ -24,7 +24,7 @@ const ExpenseList: React.FC<Props> = ({
   debitCharges,
   creditCharges,
 }) => {
-  // const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   const isDarkMode = useColorScheme() === 'dark';
   const themeColor = {
@@ -36,7 +36,7 @@ const ExpenseList: React.FC<Props> = ({
   return (
     <Shadow
       distance={5}
-      startColor={'#b5b5b5'}
+      startColor={LIGHT_GRAY}
       radius={8}
       viewStyle={{width: '100%'}}
       containerViewStyle={styles.shadowContainer}>

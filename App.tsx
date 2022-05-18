@@ -24,6 +24,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import HomeScreen from './App/HomeScreen/HomeScreen';
+import {PURPLE, TAN} from './App/Types';
 
 const Stack = createNativeStackNavigator();
 
@@ -187,9 +188,9 @@ const App = () => {
           options={{
             headerTitle: 'Xpense',
             headerRight: () => (
-              <Button color={'#a5a180'} onPress={_signOut} title="Sign Out" />
+              <Button color={TAN} onPress={_signOut} title="Sign Out" />
             ),
-            headerStyle: {backgroundColor: '#a49afc'},
+            headerStyle: {backgroundColor: PURPLE},
             headerTintColor: themeColor.color,
           }}
           initialParams={{welcomeMessage: 'Hello World!'}}

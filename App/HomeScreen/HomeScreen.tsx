@@ -21,11 +21,16 @@ import ExpenseList from '../ExpenseList/ExpenseList';
 import {addExpense, getExpenses} from '../firebase/firestore';
 
 import {
+  DARK_GRAY,
   Expense,
   FirestoreExpense,
   LIGHT_GRAY,
   LIST_HEIGHT,
+  OFF_WHITE,
+  PURPLE,
+  SHADOW,
   StackParamsList,
+  TAN,
 } from '../Types';
 
 type Props = NativeStackScreenProps<StackParamsList, 'HomeScreen'>;
@@ -44,7 +49,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
 
   const isDarkMode = useColorScheme() === 'dark';
   const themeBackgroundColor = {
-    backgroundColor: isDarkMode ? '#5c5a5b' : '#e5e3f3',
+    backgroundColor: isDarkMode ? DARK_GRAY : OFF_WHITE,
   };
   const themeColor = {
     color: isDarkMode ? 'white' : 'black',
@@ -74,7 +79,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
     }
   };
 
-  generateBoxShadowStyle(-2, 4, '#171717', 0.2, 3, 4, '#171717');
+  generateBoxShadowStyle(-2, 4, SHADOW, 0.2, 3, 4, SHADOW);
 
   const getItem = (data: Expense[], index: number) => ({
     id: data[index].id,
@@ -88,7 +93,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
   const EmtpyItem = () => (
     <Shadow
       distance={5}
-      startColor={'#b5b5b5'}
+      startColor={LIGHT_GRAY}
       radius={8}
       viewStyle={{width: '100%'}}
       containerViewStyle={styles.shadowContainer}>
@@ -251,7 +256,7 @@ let styles = StyleSheet.create({
   },
   newExpenseHeaderView: {
     justifyContent: 'center',
-    backgroundColor: '#a49afc',
+    backgroundColor: PURPLE,
     height: 40,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -266,7 +271,7 @@ let styles = StyleSheet.create({
     height: 60,
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    backgroundColor: '#b5b5b5',
+    backgroundColor: LIGHT_GRAY,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
   },
@@ -280,14 +285,14 @@ let styles = StyleSheet.create({
     padding: 5,
     borderWidth: 1,
     justifyContent: 'center',
-    backgroundColor: '#a5a180',
+    backgroundColor: TAN,
   },
   newExpenseSubmitText: {
     textAlign: 'center',
     fontSize: 20,
   },
   shadowProp: {
-    shadowColor: '#171717',
+    shadowColor: SHADOW,
     shadowOffset: {width: 0, height: 3},
     shadowOpacity: 0.4,
     shadowRadius: 2,
