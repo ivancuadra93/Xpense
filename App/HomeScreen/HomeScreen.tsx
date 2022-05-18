@@ -17,14 +17,20 @@ import {
 } from 'react-native';
 import DropShadow from 'react-native-drop-shadow';
 import {Shadow} from 'react-native-shadow-2';
+import ExpenseList from '../ExpenseList/ExpenseList';
 import {addExpense, getExpenses} from '../firebase/firestore';
 
-import {Expense, FirestoreExpense, StackParamsList} from '../Types';
+import {
+  Expense,
+  FirestoreExpense,
+  LIGHT_GRAY,
+  LIST_HEIGHT,
+  StackParamsList,
+} from '../Types';
 
 type Props = NativeStackScreenProps<StackParamsList, 'HomeScreen'>;
 
 const HomeScreen: React.FC<Props> = ({navigation, route}) => {
-  // const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [listData, setListData] = useState<Expense[]>();
   const [categoryInput, setCategoryInput] = useState<string>('');
   const [amountInput, setAmountInput] = useState<string>('');
@@ -70,10 +76,6 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
 
   generateBoxShadowStyle(-2, 4, '#171717', 0.2, 3, 4, '#171717');
 
-  const handleListPress = (_event: GestureResponderEvent) => {
-    setPressed(true);
-  };
-
   const getItem = (data: Expense[], index: number) => ({
     id: data[index].id,
     category: data[index].category,
@@ -82,34 +84,6 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
     creditCharges: data[index].creditCharges,
   });
   const getItemCount = (data: Expense[]) => (data ? data.length : 0);
-
-  const Item = ({category, amount, id}: Expense) => (
-    <Shadow
-      distance={5}
-      startColor={'#b5b5b5'}
-      radius={8}
-      viewStyle={{width: '100%'}}
-      containerViewStyle={styles.shadowContainer}>
-      <Pressable
-        style={({pressed}) =>
-          pressed ? styles.listPressed : styles.listNotPressed
-        }
-        onPress={handleListPress}>
-        <Text style={[styles.itemText, themeColor]}>
-          {category}: {amount}
-        </Text>
-      </Pressable>
-    </Shadow>
-  );
-  const renderItem = ({item}: any) => (
-    <Item
-      category={item.category}
-      id={item.id}
-      amount={item.amount}
-      debitCharges={item.debitCharges}
-      creditCharges={item.creditCharges}
-    />
-  );
 
   const EmtpyItem = () => (
     <Shadow
@@ -188,7 +162,15 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
           getItemCount={getItemCount}
           getItem={getItem}
           initialNumToRender={0}
-          renderItem={renderItem}
+          renderItem={({item}) => (
+            <ExpenseList
+              category={item.category}
+              id={item.id}
+              amount={item.amount}
+              debitCharges={item.debitCharges}
+              creditCharges={item.creditCharges}
+            />
+          )}
           ListEmptyComponent={renderEmptyItem}
           keyExtractor={keyExtractor}
         />
@@ -242,12 +224,6 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
   );
 };
 
-const listHeight = 40;
-const offWhitie = '#e5e3f3';
-const lightGray = '#b5b5b5';
-const darkGray = '#5c5a5b';
-const purple = '#a49afc';
-
 let styles = StyleSheet.create({
   container: {flex: 1},
   shadowContainer: {
@@ -259,20 +235,7 @@ let styles = StyleSheet.create({
     marginTop: StatusBar.currentHeight,
   },
   listItem: {
-    height: listHeight,
-    justifyContent: 'center',
-    borderRadius: 8,
-    paddingLeft: 8,
-  },
-  listPressed: {
-    height: listHeight,
-    justifyContent: 'center',
-    borderRadius: 8,
-    paddingLeft: 8,
-    backgroundColor: lightGray,
-  },
-  listNotPressed: {
-    height: listHeight,
+    height: LIST_HEIGHT,
     justifyContent: 'center',
     borderRadius: 8,
     paddingLeft: 8,

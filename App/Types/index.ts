@@ -1,3 +1,9 @@
+export const LIST_HEIGHT = 40;
+export const OFF_WHITE = '#e5e3f3';
+export const LIGHT_GRAY = '#b5b5b5';
+export const DARK_GRAY = '#5c5a5b';
+export const PURPLE = '#a49afc';
+
 export type StackParamsList = {
   HomeScreen: {
     welcomeMessage: string;
