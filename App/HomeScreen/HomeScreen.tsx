@@ -72,6 +72,8 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
     id: data[index].id,
     category: data[index].category,
     amount: data[index].amount,
+    debitCharges: data[index].debitCharges,
+    creditCharges: data[index].creditCharges,
   });
   const getItemCount = (data: Expense[]) => (data ? data.length : 0);
 
@@ -90,7 +92,13 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
     </Shadow>
   );
   const renderItem = ({item}: any) => (
-    <Item category={item.category} id={item.id} amount={item.amount} />
+    <Item
+      category={item.category}
+      id={item.id}
+      amount={item.amount}
+      debitCharges={item.debitCharges}
+      creditCharges={item.creditCharges}
+    />
   );
 
   const EmtpyItem = () => (
@@ -133,11 +141,15 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
       category: newCategory,
       amount: newAmount,
       id: id,
+      debitCharges: [],
+      creditCharges: [],
     };
 
     const firestoreExpense: FirestoreExpense = {
       category: newCategory,
       amount: newAmount,
+      debitCharges: [],
+      creditCharges: [],
     };
 
     addExpense(firestoreExpense)
