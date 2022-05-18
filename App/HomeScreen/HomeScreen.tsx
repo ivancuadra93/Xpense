@@ -1,5 +1,5 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Alert,
   Modal,
@@ -16,8 +16,9 @@ import {
 } from 'react-native';
 import DropShadow from 'react-native-drop-shadow';
 import {Shadow} from 'react-native-shadow-2';
+import {addExpense, getExpenses} from '../firebase/firestore';
 
-import {Expense, StackParamsList} from '../Types';
+import {Expense, FirestoreExpense, StackParamsList} from '../Types';
 
 type Props = NativeStackScreenProps<StackParamsList, 'HomeScreen'>;
 
@@ -72,10 +73,9 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
     category: data[index].category,
     amount: data[index].amount,
   });
-
   const getItemCount = (data: Expense[]) => (data ? data.length : 0);
 
-  const Item = ({category, amount}: Expense) => (
+  const Item = ({category, amount, id}: Expense) => (
     <Shadow
       distance={5}
       startColor={'#b5b5b5'}
@@ -107,8 +107,11 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
       </View>
     </Shadow>
   );
-
   const renderEmptyItem = () => <EmtpyItem></EmtpyItem>;
+
+  const keyExtractor = (item: Expense, index: number) => {
+    return index.toString();
+  };
 
   function createExpense(newCategory: string, newAmount: string) {
     const amountRegex = new RegExp(
@@ -124,29 +127,58 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
       return Alert.alert('Please enter a valid amount');
     }
 
-    setListData(prev => [
-      ...(prev ?? []),
-      {
-        id: Math.random().toString(12).substring(0),
-        category: newCategory,
-        amount: newAmount,
-      },
-    ]);
-    setCategoryInput('');
-    setAmountInput('');
+    const id = Math.random().toString(12).substring(0);
+
+    const expense: Expense = {
+      category: newCategory,
+      amount: newAmount,
+      id: id,
+    };
+
+    const firestoreExpense: FirestoreExpense = {
+      category: newCategory,
+      amount: newAmount,
+    };
+
+    addExpense(firestoreExpense)
+      .then(res => {
+        console.log(res);
+        setCategoryInput('');
+        setAmountInput('');
+      })
+      .catch(err => {
+        console.error(err);
+        Alert.alert('An error occurred');
+      });
+
+    // setListData(prev => [...(prev ?? []), expense]);
   }
+
+  useEffect(() => {
+    const subscriber = getExpenses({
+      next: expensesSnapshot => {
+        setListData(
+          expensesSnapshot.docs.map(doc => {
+            return {...doc.data(), ...{id: doc.id}};
+          }) as Expense[],
+        );
+      },
+    });
+
+    return () => subscriber();
+  }, []);
 
   return (
     <View style={[styles.container, themeBackgroundColor]}>
       <SafeAreaView style={styles.listContainer}>
         <VirtualizedList
           data={listData}
-          initialNumToRender={0}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
           getItemCount={getItemCount}
           getItem={getItem}
+          initialNumToRender={0}
+          renderItem={renderItem}
           ListEmptyComponent={renderEmptyItem}
+          keyExtractor={keyExtractor}
         />
       </SafeAreaView>
       <View style={styles.newExpenseView}>
