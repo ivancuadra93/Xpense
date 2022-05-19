@@ -1,29 +1,25 @@
 import React, {useState} from 'react';
 import {
+  Alert,
   GestureResponderEvent,
+  Modal,
   Pressable,
   StatusBar,
   StyleSheet,
   Text,
   useColorScheme,
+  View,
 } from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
-import {LIGHT_GRAY, LIST_HEIGHT} from '../Types';
+import ExpenseModal from '../ExpenseModal/ExpenseModal';
+import {Expense, LIGHT_GRAY, LIST_HEIGHT} from '../Types';
 
 type Props = {
-  category: string;
-  id: string;
-  amount: string;
-  debitCharges: number[];
-  creditCharges: number[];
+  expense: Expense;
 };
-const ExpenseList: React.FC<Props> = ({
-  category,
-  id,
-  amount,
-  debitCharges,
-  creditCharges,
-}) => {
+
+const ExpenseList: React.FC<Props> = ({expense}) => {
+  const {id, category, amount, debitCharges, creditCharges} = expense;
   const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   const isDarkMode = useColorScheme() === 'dark';
@@ -31,25 +27,34 @@ const ExpenseList: React.FC<Props> = ({
     color: isDarkMode ? 'white' : 'black',
   };
 
-  const handleListPress = (_event: GestureResponderEvent) => {};
+  const handleListPress = (_event: GestureResponderEvent) => {
+    setModalVisible(true);
+  };
 
   return (
-    <Shadow
-      distance={5}
-      startColor={LIGHT_GRAY}
-      radius={8}
-      viewStyle={{width: '100%'}}
-      containerViewStyle={styles.shadowContainer}>
-      <Pressable
-        style={({pressed}) =>
-          pressed ? styles.listPressed : styles.listNotPressed
-        }
-        onPress={handleListPress}>
-        <Text style={[styles.itemText, themeColor]}>
-          {category}: {amount}
-        </Text>
-      </Pressable>
-    </Shadow>
+    <>
+      <ExpenseModal
+        expense={expense}
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+      />
+      <Shadow
+        distance={5}
+        startColor={LIGHT_GRAY}
+        radius={8}
+        viewStyle={{width: '100%'}}
+        containerViewStyle={styles.shadowContainer}>
+        <Pressable
+          style={({pressed}) =>
+            pressed ? styles.listPressed : styles.listNotPressed
+          }
+          onPress={handleListPress}>
+          <Text style={[styles.itemText, themeColor]}>
+            {category}: {amount}
+          </Text>
+        </Pressable>
+      </Shadow>
+    </>
   );
 };
 

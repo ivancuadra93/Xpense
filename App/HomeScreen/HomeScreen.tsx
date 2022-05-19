@@ -167,15 +167,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
           getItemCount={getItemCount}
           getItem={getItem}
           initialNumToRender={0}
-          renderItem={({item}) => (
-            <ExpenseList
-              category={item.category}
-              id={item.id}
-              amount={item.amount}
-              debitCharges={item.debitCharges}
-              creditCharges={item.creditCharges}
-            />
-          )}
+          renderItem={({item}) => <ExpenseList expense={item} />}
           ListEmptyComponent={renderEmptyItem}
           keyExtractor={keyExtractor}
         />
