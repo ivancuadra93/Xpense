@@ -39,7 +39,6 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
   const [listData, setListData] = useState<Expense[]>();
   const [categoryInput, setCategoryInput] = useState<string>('');
   const [amountInput, setAmountInput] = useState<string>('');
-  const [pressed, setPressed] = useState<boolean>(false);
   const [categoryInputBorder, setCategoryInputBorder] = useState<{
     borderWidth: number;
   }>({borderWidth: 0.5});
@@ -128,7 +127,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
 
     const firestoreExpense: FirestoreExpense = {
       category: newCategory,
-      amount: newAmount,
+      amount: Number(newAmount),
       debitCharges: [],
       creditCharges: [],
     };

@@ -29,3 +29,35 @@ export const getExpenses = (observer: {
     .collection('Expenses')
     .onSnapshot(observer);
 };
+
+export const updateCharges = (
+  docId: string,
+  debitCharges: number[],
+  creditCharges: number[],
+): Promise<any> => {
+  const user = getUser();
+
+  const chargesRef = firestore()
+    .collection('Users')
+    .doc(user?.uid)
+    .collection('Expenses')
+    .doc(docId);
+
+  return firestore().runTransaction(async transaction => {
+    transaction.update(chargesRef, {
+      debitCharges: debitCharges,
+      creditCharges: creditCharges,
+    });
+  });
+};
+
+export const updateCreditCharges = (docId: string, data: number[]) => {
+  const user = getUser();
+
+  return firestore()
+    .collection('Users')
+    .doc(user?.uid)
+    .collection('Expenses')
+    .doc(docId)
+    .update({debitCharges: data});
+};

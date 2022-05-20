@@ -20,7 +20,9 @@ type Props = {
 
 const ExpenseList: React.FC<Props> = ({expense}) => {
   const {id, category, amount, debitCharges, creditCharges} = expense;
+
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [total, setTotal] = useState<number>(amount);
 
   const isDarkMode = useColorScheme() === 'dark';
   const themeColor = {
@@ -35,6 +37,7 @@ const ExpenseList: React.FC<Props> = ({expense}) => {
     <>
       <ExpenseModal
         expense={expense}
+        setTotal={setTotal}
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
       />
@@ -50,7 +53,7 @@ const ExpenseList: React.FC<Props> = ({expense}) => {
           }
           onPress={handleListPress}>
           <Text style={[styles.itemText, themeColor]}>
-            {category}: {amount}
+            {category}: {total}
           </Text>
         </Pressable>
       </Shadow>
