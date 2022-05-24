@@ -6,6 +6,7 @@ import {
   Pressable,
   StyleSheet,
   Text,
+  TextInput,
   useColorScheme,
   View,
 } from 'react-native';
@@ -78,28 +79,64 @@ const ExpenseModal: React.FC<Props> = ({
 
     setCalculationText(
       <>
-        <Text style={[styles.calculationText, themeColor]}>{amount}</Text>
+        <Pressable
+          style={({pressed}) => (pressed ? {opacity: 0.5} : {opacity: 1})}
+          onLongPress={() => Alert.alert('true')}>
+          <Text style={[styles.calculationText, themeColor]}>{amount}</Text>
+        </Pressable>
         <Text style={[styles.calculationText, {color: 'green'}]}>
           {debitString}
         </Text>
+        {isDebit ? (
+          <View style={[styles.currentPosition, {borderColor: 'green'}]}>
+            <Text style={[styles.calculationText, themeColor]}>
+              {`${operation} ${calculatorInputString}`}
+            </Text>
+          </View>
+        ) : (
+          <></>
+        )}
+
         <Text style={[styles.calculationText, {color: 'red'}]}>
           {creditString}
         </Text>
+        {!isDebit ? (
+          <View style={[styles.currentPosition, {borderColor: 'red'}]}>
+            <Text style={[styles.calculationText, themeColor]}>
+              {`${operation} ${calculatorInputString}`}
+            </Text>
+          </View>
+        ) : (
+          <></>
+        )}
       </>,
     );
-  }, [tempDebitCharges, tempCreditCharges]);
+  }, [
+    tempDebitCharges,
+    tempCreditCharges,
+    operation,
+    calculatorInputString,
+    isDebit,
+  ]);
 
   const appendNum = (num: number) => {
     let calculatorInputNum = Number(calculatorInputString);
 
     if (isDecimal) {
       const decimalLen = calculatorInputString.split('.')[1].length;
-      if (decimalLen >= 2) {
+
+      if (decimalLen === 0) {
+        setCalculatorInputString(
+          (calculatorInputNum + num / Math.pow(10, decimalLen + 1)).toString(),
+        );
         return;
       }
-      setCalculatorInputString(
-        (calculatorInputNum + num / Math.pow(10, decimalLen + 1)).toString(),
-      );
+      if (decimalLen === 1) {
+        setCalculatorInputString(
+          (calculatorInputNum + num / Math.pow(10, decimalLen + 1)).toFixed(2),
+        );
+        return;
+      }
     } else {
       setCalculatorInputString((calculatorInputNum * 10 + num).toString());
     }
@@ -181,11 +218,11 @@ const ExpenseModal: React.FC<Props> = ({
           </View>
           <View style={styles.modalBody}>
             <View style={styles.calculationView}>{calculationText}</View>
-            <View style={styles.calculatorInput}>
+            {/* <View style={styles.calculatorInput}>
               <Text style={[styles.calculatorInputText, themeColor]}>
                 {operation + ' ' + calculatorInputString}
               </Text>
-            </View>
+            </View> */}
             <View style={styles.calculator}>
               <View style={styles.calculatorRow}>
                 <Shadow
@@ -388,7 +425,11 @@ const ExpenseModal: React.FC<Props> = ({
                         : [styles.calculatorPressable, themeBackgroundColor]
                     }
                     onPress={() => setIsDebit(!isDebit)}>
-                    <Text style={[styles.calculatorText, themeColor]}>
+                    <Text
+                      style={[
+                        styles.calculatorText,
+                        isDebit ? {color: 'green'} : {color: 'red'},
+                      ]}>
                       {isDebit ? 'Debit' : 'Credit'}
                     </Text>
                   </Pressable>
@@ -493,16 +534,17 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   calculationText: {fontSize: 20},
+  currentPosition: {
+    marginLeft: 5,
+    borderWidth: 1,
+  },
   calculatorInput: {
     alignItems: 'center',
     justifyContent: 'center',
-    // backgroundColor: 'green',
     height: 40,
   },
   calculator: {
-    // flex: 1,
     alignContent: 'space-between',
-    // backgroundColor: 'yellow',
   },
   calculatorRow: {
     flexDirection: 'row',
@@ -535,8 +577,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  cancelPressable: {backgroundColor: 'red', borderBottomLeftRadius: 20},
-  savePressable: {backgroundColor: 'green', borderBottomRightRadius: 20},
+  cancelPressable: {backgroundColor: 'gray', borderBottomLeftRadius: 20},
+  savePressable: {backgroundColor: PURPLE, borderBottomRightRadius: 20},
   pressableOpen: {
     backgroundColor: '#F194FF',
   },
