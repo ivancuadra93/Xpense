@@ -79,11 +79,7 @@ const ExpenseModal: React.FC<Props> = ({
 
     setCalculationText(
       <>
-        <Pressable
-          style={({pressed}) => (pressed ? {opacity: 0.5} : {opacity: 1})}
-          onLongPress={() => Alert.alert('true')}>
-          <Text style={[styles.calculationText, themeColor]}>{amount}</Text>
-        </Pressable>
+        <Text style={[styles.calculationText, themeColor]}>{amount}</Text>
         <Text style={[styles.calculationText, {color: 'green'}]}>
           {debitString}
         </Text>
