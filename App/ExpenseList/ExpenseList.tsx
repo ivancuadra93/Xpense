@@ -11,6 +11,7 @@ import {
   View,
 } from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
+
 import ExpenseModal from '../ExpenseModal/ExpenseModal';
 import {Expense, LIGHT_GRAY, LIST_HEIGHT} from '../Types';
 

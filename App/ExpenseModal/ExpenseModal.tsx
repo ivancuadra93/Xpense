@@ -9,6 +9,7 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
+import {Shadow} from 'react-native-shadow-2';
 import {updateCharges} from '../firebase/firestore';
 import {
   DARK_GRAY,
@@ -197,7 +198,11 @@ const ExpenseModal: React.FC<Props> = ({
         setModalVisible(!modalVisible);
       }}>
       <View style={styles.centeredView}>
-        <View style={styles.modalView}>
+        <Shadow
+          distance={15}
+          radius={20}
+          viewStyle={styles.modalView}
+          containerViewStyle={styles.modalShadowContainer}>
           <View style={styles.modalHeader}>
             <Text
               style={[styles.modalHeaderText, styles.boxShadow, themeColor]}>
@@ -213,96 +218,256 @@ const ExpenseModal: React.FC<Props> = ({
             </View>
             <View style={styles.calculator}>
               <View style={styles.calculatorRow}>
-                <Pressable
-                  style={styles.calculatorPressable}
-                  onPress={() => appendNum(1)}>
-                  <Text style={[styles.calculatorText, themeColor]}>1</Text>
-                </Pressable>
-                <Pressable
-                  style={styles.calculatorPressable}
-                  onPress={() => appendNum(2)}>
-                  <Text style={[styles.calculatorText, themeColor]}>2</Text>
-                </Pressable>
-                <Pressable
-                  style={styles.calculatorPressable}
-                  onPress={() => appendNum(3)}>
-                  <Text style={[styles.calculatorText, themeColor]}>3</Text>
-                </Pressable>
-                <Pressable
-                  style={styles.calculatorPressable}
-                  onPress={() => setOperation('+')}>
-                  <Text style={[styles.calculatorText, themeColor]}>+</Text>
-                </Pressable>
+                <Shadow
+                  distance={10}
+                  radius={20}
+                  viewStyle={{width: '100%'}}
+                  containerViewStyle={styles.calculatorShadowContainer}>
+                  <Pressable
+                    style={({pressed}) =>
+                      pressed
+                        ? [styles.calculatorPressable]
+                        : [styles.calculatorPressable, themeBackgroundColor]
+                    }
+                    onPress={() => appendNum(1)}>
+                    <Text style={[styles.calculatorText, themeColor]}>1</Text>
+                  </Pressable>
+                </Shadow>
+                <Shadow
+                  distance={10}
+                  radius={20}
+                  viewStyle={{width: '100%'}}
+                  containerViewStyle={styles.calculatorShadowContainer}>
+                  <Pressable
+                    style={({pressed}) =>
+                      pressed
+                        ? [styles.calculatorPressable]
+                        : [styles.calculatorPressable, themeBackgroundColor]
+                    }
+                    onPress={() => appendNum(2)}>
+                    <Text style={[styles.calculatorText, themeColor]}>2</Text>
+                  </Pressable>
+                </Shadow>
+                <Shadow
+                  distance={10}
+                  radius={20}
+                  viewStyle={{width: '100%'}}
+                  containerViewStyle={styles.calculatorShadowContainer}>
+                  <Pressable
+                    style={({pressed}) =>
+                      pressed
+                        ? [styles.calculatorPressable]
+                        : [styles.calculatorPressable, themeBackgroundColor]
+                    }
+                    onPress={() => appendNum(3)}>
+                    <Text style={[styles.calculatorText, themeColor]}>3</Text>
+                  </Pressable>
+                </Shadow>
+                <Shadow
+                  distance={10}
+                  radius={20}
+                  viewStyle={{width: '100%'}}
+                  containerViewStyle={styles.calculatorShadowContainer}>
+                  <Pressable
+                    style={({pressed}) =>
+                      pressed
+                        ? [styles.calculatorPressable]
+                        : [styles.calculatorPressable, themeBackgroundColor]
+                    }
+                    onPress={() => setOperation('+')}>
+                    <Text style={[styles.calculatorText, themeColor]}>+</Text>
+                  </Pressable>
+                </Shadow>
               </View>
               <View style={styles.calculatorRow}>
-                <Pressable
-                  style={styles.calculatorPressable}
-                  onPress={() => appendNum(4)}>
-                  <Text style={[styles.calculatorText, themeColor]}>4</Text>
-                </Pressable>
-                <Pressable
-                  style={styles.calculatorPressable}
-                  onPress={() => appendNum(5)}>
-                  <Text style={[styles.calculatorText, themeColor]}>5</Text>
-                </Pressable>
-                <Pressable
-                  style={styles.calculatorPressable}
-                  onPress={() => appendNum(6)}>
-                  <Text style={[styles.calculatorText, themeColor]}>6</Text>
-                </Pressable>
-                <Pressable
-                  style={styles.calculatorPressable}
-                  onPress={() => setOperation('-')}>
-                  <Text style={[styles.calculatorText, themeColor]}>-</Text>
-                </Pressable>
+                <Shadow
+                  distance={10}
+                  radius={20}
+                  viewStyle={{width: '100%'}}
+                  containerViewStyle={styles.calculatorShadowContainer}>
+                  <Pressable
+                    style={({pressed}) =>
+                      pressed
+                        ? [styles.calculatorPressable]
+                        : [styles.calculatorPressable, themeBackgroundColor]
+                    }
+                    onPress={() => appendNum(4)}>
+                    <Text style={[styles.calculatorText, themeColor]}>4</Text>
+                  </Pressable>
+                </Shadow>
+                <Shadow
+                  distance={10}
+                  radius={20}
+                  viewStyle={{width: '100%'}}
+                  containerViewStyle={styles.calculatorShadowContainer}>
+                  <Pressable
+                    style={({pressed}) =>
+                      pressed
+                        ? [styles.calculatorPressable]
+                        : [styles.calculatorPressable, themeBackgroundColor]
+                    }
+                    onPress={() => appendNum(5)}>
+                    <Text style={[styles.calculatorText, themeColor]}>5</Text>
+                  </Pressable>
+                </Shadow>
+                <Shadow
+                  distance={10}
+                  radius={20}
+                  viewStyle={{width: '100%'}}
+                  containerViewStyle={styles.calculatorShadowContainer}>
+                  <Pressable
+                    style={({pressed}) =>
+                      pressed
+                        ? [styles.calculatorPressable]
+                        : [styles.calculatorPressable, themeBackgroundColor]
+                    }
+                    onPress={() => appendNum(6)}>
+                    <Text style={[styles.calculatorText, themeColor]}>6</Text>
+                  </Pressable>
+                </Shadow>
+                <Shadow
+                  distance={10}
+                  radius={20}
+                  viewStyle={{width: '100%'}}
+                  containerViewStyle={styles.calculatorShadowContainer}>
+                  <Pressable
+                    style={({pressed}) =>
+                      pressed
+                        ? [styles.calculatorPressable]
+                        : [styles.calculatorPressable, themeBackgroundColor]
+                    }
+                    onPress={() => setOperation('-')}>
+                    <Text style={[styles.calculatorText, themeColor]}>-</Text>
+                  </Pressable>
+                </Shadow>
               </View>
               <View style={styles.calculatorRow}>
-                <Pressable
-                  style={styles.calculatorPressable}
-                  onPress={() => appendNum(7)}>
-                  <Text style={[styles.calculatorText, themeColor]}>7</Text>
-                </Pressable>
-                <Pressable
-                  style={styles.calculatorPressable}
-                  onPress={() => appendNum(8)}>
-                  <Text style={[styles.calculatorText, themeColor]}>8</Text>
-                </Pressable>
-                <Pressable
-                  style={styles.calculatorPressable}
-                  onPress={() => appendNum(9)}>
-                  <Text style={[styles.calculatorText, themeColor]}>9</Text>
-                </Pressable>
-                <Pressable
-                  style={styles.calculatorPressable}
-                  onPress={() => backSpace()}>
-                  <Text style={[styles.calculatorText, themeColor]}>
-                    {'<-'}
-                  </Text>
-                </Pressable>
+                <Shadow
+                  distance={10}
+                  radius={20}
+                  viewStyle={{width: '100%'}}
+                  containerViewStyle={styles.calculatorShadowContainer}>
+                  <Pressable
+                    style={({pressed}) =>
+                      pressed
+                        ? [styles.calculatorPressable]
+                        : [styles.calculatorPressable, themeBackgroundColor]
+                    }
+                    onPress={() => appendNum(7)}>
+                    <Text style={[styles.calculatorText, themeColor]}>7</Text>
+                  </Pressable>
+                </Shadow>
+                <Shadow
+                  distance={10}
+                  radius={20}
+                  viewStyle={{width: '100%'}}
+                  containerViewStyle={styles.calculatorShadowContainer}>
+                  <Pressable
+                    style={({pressed}) =>
+                      pressed
+                        ? [styles.calculatorPressable]
+                        : [styles.calculatorPressable, themeBackgroundColor]
+                    }
+                    onPress={() => appendNum(8)}>
+                    <Text style={[styles.calculatorText, themeColor]}>8</Text>
+                  </Pressable>
+                </Shadow>
+                <Shadow
+                  distance={10}
+                  radius={20}
+                  viewStyle={{width: '100%'}}
+                  containerViewStyle={styles.calculatorShadowContainer}>
+                  <Pressable
+                    style={({pressed}) =>
+                      pressed
+                        ? [styles.calculatorPressable]
+                        : [styles.calculatorPressable, themeBackgroundColor]
+                    }
+                    onPress={() => appendNum(9)}>
+                    <Text style={[styles.calculatorText, themeColor]}>9</Text>
+                  </Pressable>
+                </Shadow>
+                <Shadow
+                  distance={10}
+                  radius={20}
+                  viewStyle={{width: '100%'}}
+                  containerViewStyle={styles.calculatorShadowContainer}>
+                  <Pressable
+                    style={({pressed}) =>
+                      pressed
+                        ? [styles.calculatorPressable]
+                        : [styles.calculatorPressable, themeBackgroundColor]
+                    }
+                    onPress={() => backSpace()}>
+                    <Text style={[styles.calculatorText, themeColor]}>
+                      {'<-'}
+                    </Text>
+                  </Pressable>
+                </Shadow>
               </View>
               <View style={styles.calculatorRow}>
-                <Pressable
-                  style={styles.calculatorPressable}
-                  onPress={() => setIsDebit(!isDebit)}>
-                  <Text style={[styles.calculatorText, themeColor]}>
-                    {isDebit ? 'Debit' : 'Credit'}
-                  </Text>
-                </Pressable>
-                <Pressable
-                  style={styles.calculatorPressable}
-                  onPress={() => appendNum(0)}>
-                  <Text style={[styles.calculatorText, themeColor]}>0</Text>
-                </Pressable>
-                <Pressable
-                  style={styles.calculatorPressable}
-                  onPress={() => addDecimal()}>
-                  <Text style={[styles.calculatorText, themeColor]}>.</Text>
-                </Pressable>
-                <Pressable
-                  style={styles.calculatorPressable}
-                  onPress={() => calculate()}>
-                  <Text style={[styles.calculatorText, themeColor]}>=</Text>
-                </Pressable>
+                <Shadow
+                  distance={10}
+                  radius={20}
+                  viewStyle={{width: '100%'}}
+                  containerViewStyle={styles.calculatorShadowContainer}>
+                  <Pressable
+                    style={({pressed}) =>
+                      pressed
+                        ? [styles.calculatorPressable]
+                        : [styles.calculatorPressable, themeBackgroundColor]
+                    }
+                    onPress={() => setIsDebit(!isDebit)}>
+                    <Text style={[styles.calculatorText, themeColor]}>
+                      {isDebit ? 'Debit' : 'Credit'}
+                    </Text>
+                  </Pressable>
+                </Shadow>
+                <Shadow
+                  distance={10}
+                  radius={20}
+                  viewStyle={{width: '100%'}}
+                  containerViewStyle={styles.calculatorShadowContainer}>
+                  <Pressable
+                    style={({pressed}) =>
+                      pressed
+                        ? [styles.calculatorPressable]
+                        : [styles.calculatorPressable, themeBackgroundColor]
+                    }
+                    onPress={() => appendNum(0)}>
+                    <Text style={[styles.calculatorText, themeColor]}>0</Text>
+                  </Pressable>
+                </Shadow>
+                <Shadow
+                  distance={10}
+                  radius={20}
+                  viewStyle={{width: '100%'}}
+                  containerViewStyle={styles.calculatorShadowContainer}>
+                  <Pressable
+                    style={({pressed}) =>
+                      pressed
+                        ? [styles.calculatorPressable]
+                        : [styles.calculatorPressable, themeBackgroundColor]
+                    }
+                    onPress={() => addDecimal()}>
+                    <Text style={[styles.calculatorText, themeColor]}>.</Text>
+                  </Pressable>
+                </Shadow>
+                <Shadow
+                  distance={10}
+                  radius={20}
+                  viewStyle={{width: '100%'}}
+                  containerViewStyle={styles.calculatorShadowContainer}>
+                  <Pressable
+                    style={({pressed}) =>
+                      pressed
+                        ? [styles.calculatorPressable]
+                        : [styles.calculatorPressable, themeBackgroundColor]
+                    }
+                    onPress={() => calculate()}>
+                    <Text style={[styles.calculatorText, themeColor]}>=</Text>
+                  </Pressable>
+                </Shadow>
               </View>
               <View style={styles.calculatorRow}></View>
             </View>
@@ -319,22 +484,22 @@ const ExpenseModal: React.FC<Props> = ({
               <Text style={[styles.textStyle, themeColor]}>Save</Text>
             </Pressable>
           </View>
-        </View>
+        </Shadow>
       </View>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
+  modalShadowContainer: {
+    marginHorizontal: 10,
+  },
   centeredView: {
     flex: 1,
     justifyContent: 'center',
   },
   modalView: {
-    flex: 0.5,
-    backgroundColor: 'white',
     borderRadius: 20,
-    margin: 10,
   },
   modalHeader: {
     justifyContent: 'center',
@@ -348,8 +513,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   modalBody: {
+    justifyContent: 'space-evenly',
     backgroundColor: LIGHT_GRAY,
-    height: '100%',
+    height: 500,
   },
   calculationView: {
     flexDirection: 'row',
@@ -357,25 +523,32 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   calculationText: {fontSize: 20},
+  calculatorInput: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    // backgroundColor: 'green',
+    height: 40,
+  },
   calculator: {
     // flex: 1,
     alignContent: 'space-between',
-    backgroundColor: 'yellow',
+    // backgroundColor: 'yellow',
   },
-  calculatorRow: {flexDirection: 'row', justifyContent: 'space-evenly'},
-  calculatorInput: {
-    alignItems: 'center',
-    backgroundColor: 'green',
-    height: 40,
+  calculatorRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    marginHorizontal: 10,
+  },
+  calculatorShadowContainer: {
+    width: '22%',
+    margin: 10,
   },
   calculatorInputText: {fontSize: 20},
   calculatorPressable: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: 5,
-    width: '22%',
     height: 50,
-    backgroundColor: 'red',
+    borderRadius: 20,
   },
   calculatorText: {fontSize: 30},
   modalFooter: {
