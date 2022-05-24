@@ -214,11 +214,6 @@ const ExpenseModal: React.FC<Props> = ({
           </View>
           <View style={styles.modalBody}>
             <View style={styles.calculationView}>{calculationText}</View>
-            {/* <View style={styles.calculatorInput}>
-              <Text style={[styles.calculatorInputText, themeColor]}>
-                {operation + ' ' + calculatorInputString}
-              </Text>
-            </View> */}
             <View style={styles.calculator}>
               <View style={styles.calculatorRow}>
                 <Shadow
@@ -476,7 +471,6 @@ const ExpenseModal: React.FC<Props> = ({
                   </Pressable>
                 </Shadow>
               </View>
-              <View style={styles.calculatorRow}></View>
             </View>
           </View>
           <View style={styles.modalFooter}>
@@ -534,11 +528,6 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     borderWidth: 1,
   },
-  calculatorInput: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 40,
-  },
   calculator: {
     alignContent: 'space-between',
   },
@@ -551,7 +540,6 @@ const styles = StyleSheet.create({
     width: '22%',
     margin: 10,
   },
-  calculatorInputText: {fontSize: 20},
   calculatorPressable: {
     alignItems: 'center',
     justifyContent: 'center',
