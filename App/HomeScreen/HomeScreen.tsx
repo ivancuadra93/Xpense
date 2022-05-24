@@ -2,9 +2,6 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useEffect, useState} from 'react';
 import {
   Alert,
-  GestureResponderEvent,
-  Modal,
-  Platform,
   Pressable,
   SafeAreaView,
   StatusBar,
@@ -15,7 +12,6 @@ import {
   View,
   VirtualizedList,
 } from 'react-native';
-import DropShadow from 'react-native-drop-shadow';
 import {Shadow} from 'react-native-shadow-2';
 import ExpenseList from '../ExpenseList/ExpenseList';
 import {addExpense, getExpenses} from '../firebase/firestore';
@@ -28,7 +24,6 @@ import {
   LIST_HEIGHT,
   OFF_WHITE,
   PURPLE,
-  SHADOW,
   StackParamsList,
   TAN,
 } from '../Types';
@@ -53,32 +48,6 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
   const themeColor = {
     color: isDarkMode ? 'white' : 'black',
   };
-
-  const generateBoxShadowStyle = (
-    xOffset: number,
-    yOffset: number,
-    shadowColorIos: string,
-    shadowOpacity: number,
-    shadowRadius: number,
-    elevation: number,
-    shadowColorAndroid: string,
-  ) => {
-    if (Platform.OS === 'ios') {
-      styles.boxShadow = {
-        shadowColor: shadowColorIos,
-        shadowOffset: {width: xOffset, height: yOffset},
-        shadowOpacity,
-        shadowRadius,
-      };
-    } else if (Platform.OS === 'android') {
-      styles.boxShadow = {
-        elevation,
-        shadowColor: shadowColorAndroid,
-      };
-    }
-  };
-
-  generateBoxShadowStyle(-2, 4, SHADOW, 0.2, 3, 4, SHADOW);
 
   const getItem = (data: Expense[], index: number) => ({
     id: data[index].id,
@@ -174,18 +143,13 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
       <View style={styles.newExpenseView}>
         <Shadow distance={10} radius={20} viewStyle={{width: '100%'}}>
           <View style={styles.newExpenseHeaderView}>
-            <Text
-              style={[
-                styles.newExpenseHeaderText,
-                styles.boxShadow,
-                themeColor,
-              ]}>
+            <Text style={[styles.newExpenseHeaderText, themeColor]}>
               Enter a New Expense
             </Text>
           </View>
           <View style={styles.newExpenseInputsView}>
             <TextInput
-              style={[styles.newExpenseInput, categoryInputBorder]}
+              style={[styles.newExpenseInput, themeColor, categoryInputBorder]}
               onChangeText={setCategoryInput}
               value={categoryInput}
               placeholder="Category"
@@ -195,7 +159,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
               onBlur={() => setCategoryInputBorder({borderWidth: 0.5})}
             />
             <TextInput
-              style={[styles.newExpenseInput, amountInputBorder]}
+              style={[styles.newExpenseInput, themeColor, amountInputBorder]}
               onChangeText={setAmountInput}
               value={amountInput}
               placeholder="Amount"
@@ -204,15 +168,19 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
               onFocus={() => setAmountInputBorder({borderWidth: 1})}
               onBlur={() => setAmountInputBorder({borderWidth: 0.5})}
             />
-            <DropShadow style={styles.shadowProp}>
+            <Shadow distance={10} radius={0} viewStyle={{width: '100%'}}>
               <Pressable
                 onPress={() => createExpense(categoryInput, amountInput)}
-                style={styles.newExpenseSubmitPressable}>
+                style={({pressed}) =>
+                  pressed
+                    ? styles.newExpenseSubmitPressed
+                    : styles.newExpenseSubmitNotPressed
+                }>
                 <Text style={[styles.newExpenseSubmitText, themeColor]}>
                   Submit
                 </Text>
               </Pressable>
-            </DropShadow>
+            </Shadow>
           </View>
         </Shadow>
       </View>
@@ -271,24 +239,25 @@ let styles = StyleSheet.create({
     width: '33%',
     paddingLeft: 10,
   },
-  newExpenseSubmitPressable: {
+  newExpenseSubmitNotPressed: {
     height: 40,
     padding: 5,
     borderWidth: 1,
     justifyContent: 'center',
     backgroundColor: TAN,
   },
+  newExpenseSubmitPressed: {
+    height: 40,
+    padding: 5,
+    borderWidth: 1,
+    justifyContent: 'center',
+    backgroundColor: TAN,
+    opacity: 0.5,
+  },
   newExpenseSubmitText: {
     textAlign: 'center',
     fontSize: 20,
   },
-  shadowProp: {
-    shadowColor: SHADOW,
-    shadowOffset: {width: 0, height: 3},
-    shadowOpacity: 0.4,
-    shadowRadius: 2,
-  },
-  boxShadow: {},
 });
 
 export default HomeScreen;

@@ -11,15 +11,7 @@ import {
 } from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
 import {updateCharges} from '../firebase/firestore';
-import {
-  DARK_GRAY,
-  Expense,
-  LIGHT_GRAY,
-  OFF_WHITE,
-  PURPLE,
-  SHADOW,
-  TAN,
-} from '../Types';
+import {DARK_GRAY, Expense, LIGHT_GRAY, OFF_WHITE, PURPLE} from '../Types';
 
 type Props = {
   expense: Expense;
@@ -56,32 +48,6 @@ const ExpenseModal: React.FC<Props> = ({
   const themeColor = {
     color: isDarkMode ? 'white' : 'black',
   };
-
-  const generateBoxShadowStyle = (
-    xOffset: number,
-    yOffset: number,
-    shadowColorIos: string,
-    shadowOpacity: number,
-    shadowRadius: number,
-    elevation: number,
-    shadowColorAndroid: string,
-  ) => {
-    if (Platform.OS === 'ios') {
-      styles.boxShadow = {
-        shadowColor: shadowColorIos,
-        shadowOffset: {width: xOffset, height: yOffset},
-        shadowOpacity,
-        shadowRadius,
-      };
-    } else if (Platform.OS === 'android') {
-      styles.boxShadow = {
-        elevation,
-        shadowColor: shadowColorAndroid,
-      };
-    }
-  };
-
-  generateBoxShadowStyle(-2, 4, SHADOW, 0.2, 3, 4, SHADOW);
 
   useEffect(() => {
     let total: number = amount;
@@ -140,13 +106,17 @@ const ExpenseModal: React.FC<Props> = ({
   };
 
   const backSpace = () => {
-    const newCalculatorInputString = calculatorInputString
-      .toString()
-      .slice(0, -1);
+    const newCalculatorInputString = calculatorInputString.slice(0, -1);
+
     if (!newCalculatorInputString.includes('.')) {
       setIsDecimal(false);
     }
-    setCalculatorInputString(calculatorInputString.toString().slice(0, -1));
+
+    if (newCalculatorInputString.length === 0) {
+      setCalculatorInputString('0');
+    } else {
+      setCalculatorInputString(newCalculatorInputString);
+    }
   };
 
   const addDecimal = () => {
