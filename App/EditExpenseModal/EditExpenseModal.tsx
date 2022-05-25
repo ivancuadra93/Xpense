@@ -58,53 +58,90 @@ const EditExpenseModal: React.FC<Props> = ({
   };
 
   const handleDelete = () => {
-    deleteExpense(id)
-      .then(res => {
-        console.log(res);
-        setEditModalVisible(false);
-      })
-      .catch(err => {
-        console.error(err);
-        Alert.alert('An error occurred');
-      });
+    Alert.alert(
+      'Confirm Delete',
+      'Press DELETE to delete this entire expense.',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Delete'),
+        },
+        {
+          text: 'DELETE',
+          onPress: () => {
+            deleteExpense(id)
+              .then(res => {
+                console.log(res);
+                setEditModalVisible(false);
+              })
+              .catch(err => {
+                console.error(err);
+                Alert.alert('An error occurred');
+              });
+          },
+        },
+      ],
+    );
   };
 
   const handleReset = () => {
-    const firestoreExpense: FirestoreExpense = {
-      category: category,
-      amount: amount,
-      debitCharges: [],
-      creditCharges: [],
-    };
+    Alert.alert('Confirm Reset', 'Press RESET to reset your total.', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Reset'),
+      },
+      {
+        text: 'RESET',
+        onPress: () => {
+          const firestoreExpense: FirestoreExpense = {
+            category: category,
+            amount: amount,
+            debitCharges: [],
+            creditCharges: [],
+          };
 
-    updateExpense(id, firestoreExpense)
-      .then(res => {
-        console.log(res);
-        setEditModalVisible(false);
-      })
-      .catch(err => {
-        console.error(err);
-        Alert.alert('An error occurred');
-      });
+          updateExpense(id, firestoreExpense)
+            .then(res => {
+              console.log(res);
+              setEditModalVisible(false);
+            })
+            .catch(err => {
+              console.error(err);
+              Alert.alert('An error occurred');
+            });
+        },
+      },
+    ]);
   };
 
   const handleRollover = () => {
-    const firestoreExpense: FirestoreExpense = {
-      category: category,
-      amount: amount,
-      debitCharges: [total],
-      creditCharges: [],
-    };
+    Alert.alert('Confirm Rollover', 'Press ROLLOVER to rollover your total.', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Rollover'),
+      },
+      {
+        text: 'ROLLOVER',
+        onPress: () => {
+          const firestoreExpense: FirestoreExpense = {
+            category: category,
+            amount: amount,
+            debitCharges: [total],
+            creditCharges: [],
+          };
 
-    updateExpense(id, firestoreExpense)
-      .then(res => {
-        console.log(res);
-        setEditModalVisible(false);
-      })
-      .catch(err => {
-        console.error(err);
-        Alert.alert('An error occurred');
-      });
+          updateExpense(id, firestoreExpense)
+            .then(res => {
+              console.log(res);
+              setEditModalVisible(false);
+            })
+            .catch(err => {
+              console.error(err);
+              Alert.alert('An error occurred');
+            });
+        },
+      },
+    ]);
   };
 
   const handleCancel = () => {
@@ -113,7 +150,7 @@ const EditExpenseModal: React.FC<Props> = ({
     setEditModalVisible(false);
   };
 
-  const handleSave = (newCategory: string, newAmount: string) => {
+  const handleUpdate = (newCategory: string, newAmount: string) => {
     const amountRegex = new RegExp(
       '(?=.*?\\d)^\\$?(([1-9]\\d{0,2}(,\\d{3})*)|\\d+)?(\\.\\d{1,2})?$',
       'gm',
@@ -241,8 +278,8 @@ const EditExpenseModal: React.FC<Props> = ({
             </Pressable>
             <Pressable
               style={[styles.footerPressables, styles.savePressable]}
-              onPress={() => handleSave(categoryInput, amountInput)}>
-              <Text style={[styles.textStyle, themeColor]}>Save</Text>
+              onPress={() => handleUpdate(categoryInput, amountInput)}>
+              <Text style={[styles.textStyle, themeColor]}>Update</Text>
             </Pressable>
           </View>
         </Shadow>
@@ -266,7 +303,7 @@ const styles = StyleSheet.create({
   modalHeader: {
     justifyContent: 'center',
     backgroundColor: PURPLE,
-    height: 50,
+    height: 60,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
@@ -276,7 +313,7 @@ const styles = StyleSheet.create({
   },
   modalBody: {
     backgroundColor: LIGHT_GRAY,
-    height: 500,
+    height: 350,
   },
   totalText: {
     fontSize: 30,
@@ -326,7 +363,7 @@ const styles = StyleSheet.create({
   },
   modalFooter: {
     flexDirection: 'row',
-    height: 55,
+    height: 60,
     backgroundColor: LIGHT_GRAY,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,

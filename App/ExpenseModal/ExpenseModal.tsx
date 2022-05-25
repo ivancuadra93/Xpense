@@ -521,7 +521,7 @@ const styles = StyleSheet.create({
   modalHeader: {
     justifyContent: 'center',
     backgroundColor: PURPLE,
-    height: 50,
+    height: 60,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
@@ -565,7 +565,7 @@ const styles = StyleSheet.create({
   calculatorText: {fontSize: 30},
   modalFooter: {
     flexDirection: 'row',
-    height: 55,
+    height: 60,
     backgroundColor: LIGHT_GRAY,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
