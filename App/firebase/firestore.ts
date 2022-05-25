@@ -16,6 +16,30 @@ export const addExpense = (expense: FirestoreExpense): Promise<any> => {
     .add(expense);
 };
 
+export const updateExpense = (
+  docId: string,
+  expense: FirestoreExpense,
+): Promise<any> => {
+  const user = getUser();
+
+  return firestore()
+    .collection('Users')
+    .doc(user?.uid)
+    .collection('Expenses')
+    .doc(docId)
+    .update(expense);
+};
+
+export const deleteExpense = (docId: string): Promise<any> => {
+  const user = getUser();
+  return firestore()
+    .collection('Users')
+    .doc(user?.uid)
+    .collection('Expenses')
+    .doc(docId)
+    .delete();
+};
+
 export const getExpenses = (observer: {
   next?: ((snapshot: QuerySnapshot) => void) | undefined;
   error?: ((error: any) => void) | undefined;
@@ -49,15 +73,4 @@ export const updateCharges = (
       creditCharges: creditCharges,
     });
   });
-};
-
-export const updateCreditCharges = (docId: string, data: number[]) => {
-  const user = getUser();
-
-  return firestore()
-    .collection('Users')
-    .doc(user?.uid)
-    .collection('Expenses')
-    .doc(docId)
-    .update({debitCharges: data});
 };

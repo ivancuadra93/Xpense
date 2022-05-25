@@ -92,8 +92,6 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
       return Alert.alert('Please enter a valid amount');
     }
 
-    const id = Math.random().toString(12).substring(0);
-
     const firestoreExpense: FirestoreExpense = {
       category: newCategory,
       amount: Number(newAmount),

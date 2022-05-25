@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
 
-import {addExpense, updateCharges} from '../firebase/firestore';
+import {deleteExpense, updateExpense} from '../firebase/firestore';
 import {
   DARK_GRAY,
   Expense,
@@ -24,7 +24,6 @@ import {
 type Props = {
   expense: Expense;
   total: number;
-  setTotal: React.Dispatch<React.SetStateAction<number>>;
   editModalVisible: boolean;
   setEditModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -32,14 +31,17 @@ type Props = {
 const EditExpenseModal: React.FC<Props> = ({
   expense,
   total,
-  setTotal,
   editModalVisible,
   setEditModalVisible,
 }) => {
   const {id, category, amount, debitCharges, creditCharges} = expense;
 
-  const [categoryInput, setCategoryInput] = useState<string>(category);
-  const [amountInput, setAmountInput] = useState<string>(amount.toString());
+  const [categoryInput, setCategoryInput] = useState<string>('');
+  const [amountInput, setAmountInput] = useState<string>('');
+  const [tempDebitCharges, setTempDebitCharges] =
+    useState<number[]>(debitCharges);
+  const [tempCreditCharges, setTempCreditCharges] =
+    useState<number[]>(creditCharges);
   const [categoryInputBorder, setCategoryInputBorder] = useState<{
     borderWidth: number;
   }>({borderWidth: 0.5});
@@ -55,48 +57,100 @@ const EditExpenseModal: React.FC<Props> = ({
     color: isDarkMode ? 'white' : 'black',
   };
 
+  const handleDelete = () => {
+    deleteExpense(id)
+      .then(res => {
+        console.log(res);
+        setEditModalVisible(false);
+      })
+      .catch(err => {
+        console.error(err);
+        Alert.alert('An error occurred');
+      });
+  };
+
+  const handleReset = () => {
+    const firestoreExpense: FirestoreExpense = {
+      category: category,
+      amount: amount,
+      debitCharges: [],
+      creditCharges: [],
+    };
+
+    updateExpense(id, firestoreExpense)
+      .then(res => {
+        console.log(res);
+        setEditModalVisible(false);
+      })
+      .catch(err => {
+        console.error(err);
+        Alert.alert('An error occurred');
+      });
+  };
+
+  const handleRollover = () => {
+    const firestoreExpense: FirestoreExpense = {
+      category: category,
+      amount: amount,
+      debitCharges: [total],
+      creditCharges: [],
+    };
+
+    updateExpense(id, firestoreExpense)
+      .then(res => {
+        console.log(res);
+        setEditModalVisible(false);
+      })
+      .catch(err => {
+        console.error(err);
+        Alert.alert('An error occurred');
+      });
+  };
+
   const handleCancel = () => {
-    //   setTempDebitCharges([...debitCharges]);
-    //   setTempCreditCharges([...creditCharges]);
+    setAmountInput(amount.toString());
+    setCategoryInput(category);
     setEditModalVisible(false);
   };
 
   const handleSave = (newCategory: string, newAmount: string) => {
-    // const amountRegex = new RegExp(
-    //   '(?=.*?\\d)^\\$?(([1-9]\\d{0,2}(,\\d{3})*)|\\d+)?(\\.\\d{1,2})?$',
-    //   'gm',
-    // );
+    const amountRegex = new RegExp(
+      '(?=.*?\\d)^\\$?(([1-9]\\d{0,2}(,\\d{3})*)|\\d+)?(\\.\\d{1,2})?$',
+      'gm',
+    );
 
-    // if (newCategory.length === 0) {
-    //   return Alert.alert('Category may not be empty');
-    // }
+    if (newCategory.length === 0) {
+      return Alert.alert('Category may not be empty');
+    }
 
-    // if (!amountRegex.test(newAmount)) {
-    //   return Alert.alert('Please enter a valid amount');
-    // }
+    if (!amountRegex.test(newAmount)) {
+      return Alert.alert('Please enter a valid amount');
+    }
 
-    // const id = Math.random().toString(12).substring(0);
+    const firestoreExpense: FirestoreExpense = {
+      category: newCategory,
+      amount: Number(newAmount),
+      debitCharges: tempDebitCharges,
+      creditCharges: tempCreditCharges,
+    };
 
-    // const firestoreExpense: FirestoreExpense = {
-    //   category: newCategory,
-    //   amount: Number(newAmount),
-    //   debitCharges: [],
-    //   creditCharges: [],
-    // };
-
-    // addExpense(firestoreExpense)
-    //   .then(res => {
-    //     console.log(res);
-    //     setCategoryInput('');
-    //     setAmountInput('');
-    //   })
-    //   .catch(err => {
-    //     console.error(err);
-    //     Alert.alert('An error occurred');
-    //   });
-
-    Alert.alert('Saved!');
+    updateExpense(id, firestoreExpense)
+      .then(res => {
+        console.log(res);
+        setEditModalVisible(false);
+      })
+      .catch(err => {
+        console.error(err);
+        Alert.alert('An error occurred');
+      });
   };
+
+  useEffect(() => {
+    setCategoryInput(category);
+    setAmountInput(amount.toString());
+    setTempDebitCharges(debitCharges);
+    setTempCreditCharges(creditCharges);
+  }, [category, amount, debitCharges, creditCharges]);
 
   return (
     <Modal
@@ -121,15 +175,18 @@ const EditExpenseModal: React.FC<Props> = ({
             <Text style={[styles.totalText, themeColor]}>Total: {total}</Text>
             <View style={styles.editOptions}>
               <Pressable
-                style={[styles.optionPressable, {backgroundColor: 'red'}]}>
+                style={[styles.optionPressable, {backgroundColor: 'red'}]}
+                onPress={() => handleDelete()}>
                 <Text style={[styles.modalBodyText, themeColor]}>Delete</Text>
               </Pressable>
               <Pressable
-                style={[styles.optionPressable, {backgroundColor: 'green'}]}>
+                style={[styles.optionPressable, {backgroundColor: 'green'}]}
+                onPress={() => handleReset()}>
                 <Text style={[styles.modalBodyText, themeColor]}>Reset</Text>
               </Pressable>
               <Pressable
-                style={[styles.optionPressable, {backgroundColor: 'blue'}]}>
+                style={[styles.optionPressable, {backgroundColor: 'blue'}]}
+                onPress={() => handleRollover()}>
                 <Text style={[styles.modalBodyText, themeColor]}>Rollover</Text>
               </Pressable>
             </View>

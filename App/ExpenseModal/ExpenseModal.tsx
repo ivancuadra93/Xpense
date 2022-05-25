@@ -57,6 +57,13 @@ const ExpenseModal: React.FC<Props> = ({
     for (let i = 0; i < tempDebitCharges.length; i++) {
       total += tempDebitCharges[i];
 
+      if (total.toString().includes('.')) {
+        const totalDecimalLen = total.toString().split('.')[1].length;
+        if (totalDecimalLen > 2) {
+          total = Number(total.toFixed(2));
+        }
+      }
+
       if (tempDebitCharges[i] < 0) {
         debitString += ` - ${tempDebitCharges[i] * -1}  = ${total}`;
       } else {
@@ -66,6 +73,13 @@ const ExpenseModal: React.FC<Props> = ({
 
     for (let i = 0; i < tempCreditCharges.length; i++) {
       total += tempCreditCharges[i];
+
+      if (total.toString().includes('.')) {
+        const totalDecimalLen = total.toString().split('.')[1].length;
+        if (totalDecimalLen > 2) {
+          total = Number(total.toFixed(2));
+        }
+      }
 
       if (tempCreditCharges[i] < 0) {
         creditString += ` - ${tempCreditCharges[i] * -1}  = ${total}`;
@@ -112,7 +126,13 @@ const ExpenseModal: React.FC<Props> = ({
     operation,
     calculatorInputString,
     isDebit,
+    amount,
   ]);
+
+  useEffect(() => {
+    setTempDebitCharges(debitCharges);
+    setTempCreditCharges(creditCharges);
+  }, [debitCharges, creditCharges]);
 
   const appendNum = (num: number) => {
     let calculatorInputNum = Number(calculatorInputString);

@@ -1,14 +1,11 @@
 import React, {useState} from 'react';
 import {
-  Alert,
   GestureResponderEvent,
-  Modal,
   Pressable,
   StatusBar,
   StyleSheet,
   Text,
   useColorScheme,
-  View,
 } from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
 import EditExpenseModal from '../EditExpenseModal/EditExpenseModal';
@@ -52,7 +49,6 @@ const ExpenseList: React.FC<Props> = ({expense}) => {
       <EditExpenseModal
         expense={expense}
         total={total}
-        setTotal={setTotal}
         editModalVisible={editModalVisible}
         setEditModalVisible={setEditModalVisible}
       />
