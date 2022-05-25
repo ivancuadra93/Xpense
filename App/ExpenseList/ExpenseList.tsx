@@ -11,6 +11,7 @@ import {
   View,
 } from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
+import EditExpenseModal from '../EditExpenseModal/EditExpenseModal';
 
 import ExpenseModal from '../ExpenseModal/ExpenseModal';
 import {Expense, LIGHT_GRAY, LIST_HEIGHT} from '../Types';
@@ -23,6 +24,8 @@ const ExpenseList: React.FC<Props> = ({expense}) => {
   const {id, category, amount, debitCharges, creditCharges} = expense;
 
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [editModalVisible, setEditModalVisible] = useState<boolean>(false);
+
   const [total, setTotal] = useState<number>(amount);
 
   const isDarkMode = useColorScheme() === 'dark';
@@ -34,6 +37,10 @@ const ExpenseList: React.FC<Props> = ({expense}) => {
     setModalVisible(true);
   };
 
+  const handleListLongPress = () => {
+    setEditModalVisible(true);
+  };
+
   return (
     <>
       <ExpenseModal
@@ -41,6 +48,13 @@ const ExpenseList: React.FC<Props> = ({expense}) => {
         setTotal={setTotal}
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
+      />
+      <EditExpenseModal
+        expense={expense}
+        total={total}
+        setTotal={setTotal}
+        editModalVisible={editModalVisible}
+        setEditModalVisible={setEditModalVisible}
       />
       <Shadow
         distance={5}
@@ -52,7 +66,8 @@ const ExpenseList: React.FC<Props> = ({expense}) => {
           style={({pressed}) =>
             pressed ? styles.listPressed : styles.listNotPressed
           }
-          onPress={handleListPress}>
+          onPress={handleListPress}
+          onLongPress={handleListLongPress}>
           <Text style={[styles.itemText, themeColor]}>
             {category}: {total}
           </Text>

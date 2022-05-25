@@ -2,15 +2,14 @@ import React, {useEffect, useState} from 'react';
 import {
   Alert,
   Modal,
-  Platform,
   Pressable,
   StyleSheet,
   Text,
-  TextInput,
   useColorScheme,
   View,
 } from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
+
 import {updateCharges} from '../firebase/firestore';
 import {DARK_GRAY, Expense, LIGHT_GRAY, OFF_WHITE, PURPLE} from '../Types';
 
@@ -197,7 +196,6 @@ const ExpenseModal: React.FC<Props> = ({
       transparent={true}
       visible={modalVisible}
       onRequestClose={() => {
-        Alert.alert('Modal has been closed.');
         setModalVisible(!modalVisible);
       }}>
       <View style={styles.centeredView}>
@@ -207,10 +205,7 @@ const ExpenseModal: React.FC<Props> = ({
           viewStyle={styles.modalView}
           containerViewStyle={styles.modalShadowContainer}>
           <View style={styles.modalHeader}>
-            <Text
-              style={[styles.modalHeaderText, styles.boxShadow, themeColor]}>
-              {category}
-            </Text>
+            <Text style={[styles.modalHeaderText, themeColor]}>{category}</Text>
           </View>
           <View style={styles.modalBody}>
             <View style={styles.calculationView}>{calculationText}</View>
@@ -500,6 +495,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   modalView: {
+    width: '100%',
     borderRadius: 20,
   },
   modalHeader: {
@@ -555,7 +551,6 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 20,
     justifyContent: 'space-evenly',
   },
-  boxShadow: {},
   footerPressables: {
     width: '50%',
     alignItems: 'center',
@@ -563,12 +558,6 @@ const styles = StyleSheet.create({
   },
   cancelPressable: {backgroundColor: 'gray', borderBottomLeftRadius: 20},
   savePressable: {backgroundColor: PURPLE, borderBottomRightRadius: 20},
-  pressableOpen: {
-    backgroundColor: '#F194FF',
-  },
-  pressableClose: {
-    backgroundColor: '#2196F3',
-  },
   textStyle: {
     fontWeight: 'bold',
     textAlign: 'center',
