@@ -16,8 +16,9 @@ import {
   GoogleSignin,
   GoogleSigninButton,
   statusCodes,
-  User,
-} from 'react-native-google-signin';
+  User
+} from '@react-native-google-signin/google-signin';
+
 import auth from '@react-native-firebase/auth';
 
 import {NavigationContainer} from '@react-navigation/native';
