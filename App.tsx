@@ -70,7 +70,7 @@ const App = () => {
   const _isSignedIn = async () => {
     const isSignedIn = await GoogleSignin.isSignedIn();
     if (isSignedIn) {
-      Alert.alert('User is already signed in');
+      console.log('User is already signed in');
       // Set User Info if user is already signed in
       _getCurrentUserInfo();
     } else {
