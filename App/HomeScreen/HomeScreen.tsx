@@ -2,6 +2,8 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useEffect, useState} from 'react';
 import {
   Alert,
+  KeyboardAvoidingView,
+  Platform,
   Pressable,
   SafeAreaView,
   StatusBar,
@@ -138,7 +140,9 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
           keyExtractor={keyExtractor}
         />
       </SafeAreaView>
-      <View style={styles.newExpenseView}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.newExpenseView}>
         <Shadow distance={10} radius={20} viewStyle={{width: '100%'}}>
           <View style={styles.newExpenseHeaderView}>
             <Text style={[styles.newExpenseHeaderText, themeColor]}>
@@ -181,7 +185,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
             </Shadow>
           </View>
         </Shadow>
-      </View>
+      </KeyboardAvoidingView>
     </View>
   );
 };

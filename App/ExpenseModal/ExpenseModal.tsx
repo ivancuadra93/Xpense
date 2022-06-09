@@ -142,7 +142,7 @@ const ExpenseModal: React.FC<Props> = ({
 
       if (decimalLen === 0) {
         setCalculatorInputString(
-          (calculatorInputNum + num / Math.pow(10, decimalLen + 1)).toString(),
+          (calculatorInputNum + num / Math.pow(10, decimalLen + 1)).toFixed(1),
         );
         return;
       }
