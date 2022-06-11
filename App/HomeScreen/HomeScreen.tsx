@@ -2,6 +2,8 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useEffect, useState} from 'react';
 import {
   Alert,
+  KeyboardAvoidingView,
+  Platform,
   Pressable,
   SafeAreaView,
   StatusBar,
@@ -137,51 +139,58 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
           ListEmptyComponent={renderEmptyItem}
           keyExtractor={keyExtractor}
         />
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'position' : 'height'}
+          keyboardVerticalOffset={100}
+          style={styles.newExpenseView}>
+          <Shadow distance={10} radius={20} viewStyle={{width: '100%'}}>
+            <View style={styles.newExpenseHeaderView}>
+              <Text style={[styles.newExpenseHeaderText, themeColor]}>
+                Enter a New Expense
+              </Text>
+            </View>
+            <View style={styles.newExpenseInputsView}>
+              <TextInput
+                style={[
+                  styles.newExpenseInput,
+                  themeColor,
+                  categoryInputBorder,
+                ]}
+                onChangeText={setCategoryInput}
+                value={categoryInput}
+                placeholder="Category"
+                placeholderTextColor={themeColor.color}
+                keyboardType="default"
+                onFocus={() => setCategoryInputBorder({borderWidth: 1})}
+                onBlur={() => setCategoryInputBorder({borderWidth: 0.5})}
+              />
+              <TextInput
+                style={[styles.newExpenseInput, themeColor, amountInputBorder]}
+                onChangeText={setAmountInput}
+                value={amountInput}
+                placeholder="Amount"
+                placeholderTextColor={themeColor.color}
+                keyboardType="numeric"
+                onFocus={() => setAmountInputBorder({borderWidth: 1})}
+                onBlur={() => setAmountInputBorder({borderWidth: 0.5})}
+              />
+              <Shadow distance={10} radius={0} viewStyle={{width: '100%'}}>
+                <Pressable
+                  onPress={() => createExpense(categoryInput, amountInput)}
+                  style={({pressed}) =>
+                    pressed
+                      ? styles.newExpenseSubmitPressed
+                      : styles.newExpenseSubmitNotPressed
+                  }>
+                  <Text style={[styles.newExpenseSubmitText, themeColor]}>
+                    Submit
+                  </Text>
+                </Pressable>
+              </Shadow>
+            </View>
+          </Shadow>
+        </KeyboardAvoidingView>
       </SafeAreaView>
-      <View style={styles.newExpenseView}>
-        <Shadow distance={10} radius={20} viewStyle={{width: '100%'}}>
-          <View style={styles.newExpenseHeaderView}>
-            <Text style={[styles.newExpenseHeaderText, themeColor]}>
-              Enter a New Expense
-            </Text>
-          </View>
-          <View style={styles.newExpenseInputsView}>
-            <TextInput
-              style={[styles.newExpenseInput, themeColor, categoryInputBorder]}
-              onChangeText={setCategoryInput}
-              value={categoryInput}
-              placeholder="Category"
-              placeholderTextColor={themeColor.color}
-              keyboardType="default"
-              onFocus={() => setCategoryInputBorder({borderWidth: 1})}
-              onBlur={() => setCategoryInputBorder({borderWidth: 0.5})}
-            />
-            <TextInput
-              style={[styles.newExpenseInput, themeColor, amountInputBorder]}
-              onChangeText={setAmountInput}
-              value={amountInput}
-              placeholder="Amount"
-              placeholderTextColor={themeColor.color}
-              keyboardType="numeric"
-              onFocus={() => setAmountInputBorder({borderWidth: 1})}
-              onBlur={() => setAmountInputBorder({borderWidth: 0.5})}
-            />
-            <Shadow distance={10} radius={0} viewStyle={{width: '100%'}}>
-              <Pressable
-                onPress={() => createExpense(categoryInput, amountInput)}
-                style={({pressed}) =>
-                  pressed
-                    ? styles.newExpenseSubmitPressed
-                    : styles.newExpenseSubmitNotPressed
-                }>
-                <Text style={[styles.newExpenseSubmitText, themeColor]}>
-                  Submit
-                </Text>
-              </Pressable>
-            </Shadow>
-          </View>
-        </Shadow>
-      </View>
     </View>
   );
 };

@@ -16,8 +16,9 @@ import {
   GoogleSignin,
   GoogleSigninButton,
   statusCodes,
-  User,
-} from 'react-native-google-signin';
+  User
+} from '@react-native-google-signin/google-signin';
+
 import auth from '@react-native-firebase/auth';
 
 import {NavigationContainer} from '@react-navigation/native';
@@ -69,7 +70,7 @@ const App = () => {
   const _isSignedIn = async () => {
     const isSignedIn = await GoogleSignin.isSignedIn();
     if (isSignedIn) {
-      Alert.alert('User is already signed in');
+      console.log('User is already signed in');
       // Set User Info if user is already signed in
       _getCurrentUserInfo();
     } else {
