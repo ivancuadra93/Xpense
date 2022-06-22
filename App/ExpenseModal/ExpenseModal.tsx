@@ -110,7 +110,7 @@ const ExpenseModal: React.FC<Props> = ({
               </View>
             </View>
           ) : (
-            <View></View>
+            <></>
           )}
 
           <Text style={[styles.calculationText, {color: 'red'}]}>
@@ -126,7 +126,7 @@ const ExpenseModal: React.FC<Props> = ({
               </View>
             </View>
           ) : (
-            <View></View>
+            <></>
           )}
         </Text>
       </View>
