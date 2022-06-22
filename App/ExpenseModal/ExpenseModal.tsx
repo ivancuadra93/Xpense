@@ -105,7 +105,7 @@ const ExpenseModal: React.FC<Props> = ({
             <View>
               <View style={[styles.currentPosition, {borderColor: 'green'}]}>
                 <Text style={[styles.calculationText, themeColor]}>
-                  {` ${operation} ${calculatorInputString}`}
+                  {` ${operation} ${calculatorInputString} `}
                 </Text>
               </View>
             </View>
@@ -121,7 +121,7 @@ const ExpenseModal: React.FC<Props> = ({
             <View>
               <View style={[styles.currentPosition, {borderColor: 'red'}]}>
                 <Text style={[styles.calculationText, themeColor]}>
-                  {` ${operation} ${calculatorInputString}`}
+                  {` ${operation} ${calculatorInputString} `}
                 </Text>
               </View>
             </View>
