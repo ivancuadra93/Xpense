@@ -2,6 +2,10 @@
 #
 .DS_Store
 
+# VSCode
+#
+.vscode\settings.json
+
 # Xcode
 #
 build/
