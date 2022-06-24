@@ -4,7 +4,7 @@
 
 # VSCode
 #
-.vscode\settings.json
+.vscode/
 
 # Xcode
 #
