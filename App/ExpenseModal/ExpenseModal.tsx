@@ -3,6 +3,7 @@ import {
   Alert,
   Modal,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   useColorScheme,
@@ -28,10 +29,12 @@ const ExpenseModal: React.FC<Props> = ({
 }) => {
   const {id, category, amount, debitCharges, creditCharges} = expense;
 
-  const [calculationText, setCalculationText] = useState<JSX.Element>();
+  const [calculationText, setCalculationText] = useState<JSX.Element>(
+    <View></View>,
+  );
   const [isDecimal, setIsDecimal] = useState<boolean>(false);
   const [operation, setOperation] = useState<string>('-');
-  const [isDebit, setIsDebit] = useState<boolean>(true);
+  const [isDebit, setIsDebit] = useState<boolean>(false);
   const [calculatorInputString, setCalculatorInputString] =
     useState<string>('0');
   const [tempDebitCharges, setTempDebitCharges] = useState<number[]>([
@@ -90,36 +93,46 @@ const ExpenseModal: React.FC<Props> = ({
 
     setTotal(total);
 
-    setCalculationText(
-      <>
-        <Text style={[styles.calculationText, themeColor]}>{amount}</Text>
-        <Text style={[styles.calculationText, {color: 'green'}]}>
-          {debitString}
-        </Text>
-        {isDebit ? (
-          <View style={[styles.currentPosition, {borderColor: 'green'}]}>
-            <Text style={[styles.calculationText, themeColor]}>
-              {`${operation} ${calculatorInputString}`}
-            </Text>
-          </View>
-        ) : (
-          <></>
-        )}
+    const calcText: JSX.Element = (
+      <View style={styles.calculationView}>
+        <Text>
+          <Text style={[styles.calculationText, themeColor]}>{amount}</Text>
+          <Text style={[styles.calculationText, {color: 'green'}]}>
+            {debitString}
+          </Text>
 
-        <Text style={[styles.calculationText, {color: 'red'}]}>
-          {creditString}
+          {isDebit ? (
+            <View>
+              <View style={[styles.currentPosition, {borderColor: 'green'}]}>
+                <Text style={[styles.calculationText, themeColor]}>
+                  {` ${operation} ${calculatorInputString} `}
+                </Text>
+              </View>
+            </View>
+          ) : (
+            <></>
+          )}
+
+          <Text style={[styles.calculationText, {color: 'red'}]}>
+            {creditString}
+          </Text>
+
+          {!isDebit ? (
+            <View>
+              <View style={[styles.currentPosition, {borderColor: 'red'}]}>
+                <Text style={[styles.calculationText, themeColor]}>
+                  {` ${operation} ${calculatorInputString} `}
+                </Text>
+              </View>
+            </View>
+          ) : (
+            <></>
+          )}
         </Text>
-        {!isDebit ? (
-          <View style={[styles.currentPosition, {borderColor: 'red'}]}>
-            <Text style={[styles.calculationText, themeColor]}>
-              {`${operation} ${calculatorInputString}`}
-            </Text>
-          </View>
-        ) : (
-          <></>
-        )}
-      </>,
+      </View>
     );
+
+    setCalculationText(calcText);
   }, [
     tempDebitCharges,
     tempCreditCharges,
@@ -228,7 +241,9 @@ const ExpenseModal: React.FC<Props> = ({
             <Text style={[styles.modalHeaderText, themeColor]}>{category}</Text>
           </View>
           <View style={styles.modalBody}>
-            <View style={styles.calculationView}>{calculationText}</View>
+            <ScrollView style={styles.calculationScrollView}>
+              {calculationText}
+            </ScrollView>
             <View style={styles.calculator}>
               <View style={styles.calculatorRow}>
                 <Shadow
@@ -534,14 +549,23 @@ const styles = StyleSheet.create({
     backgroundColor: LIGHT_GRAY,
     height: 500,
   },
+  calculationScrollView: {
+    // flexDirection: 'row',
+    // flexWrap: 'wrap',
+    // margin: 10,
+  },
   calculationView: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     margin: 10,
   },
-  calculationText: {fontSize: 20},
+  calculationText: {
+    fontSize: 20,
+  },
   currentPosition: {
+    marginBottom: -5,
     marginLeft: 5,
+    minWidth: 35,
     borderWidth: 1,
   },
   calculator: {
