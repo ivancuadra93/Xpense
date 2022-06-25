@@ -1,6 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {
-  Alert,
   Modal,
   Pressable,
   ScrollView,
@@ -30,7 +29,7 @@ const ExpenseModal: React.FC<Props> = ({
   const {id, category, amount, debitCharges, creditCharges} = expense;
 
   const [calculationText, setCalculationText] = useState<JSX.Element>(
-    <View></View>,
+    <Text></Text>,
   );
   const [isDecimal, setIsDecimal] = useState<boolean>(false);
   const [operation, setOperation] = useState<string>('-');
@@ -52,7 +51,7 @@ const ExpenseModal: React.FC<Props> = ({
     color: isDarkMode ? 'white' : 'black',
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     let total: number = amount;
     let debitString: string = '';
     let creditString: string = '';
@@ -68,7 +67,7 @@ const ExpenseModal: React.FC<Props> = ({
       }
 
       if (tempDebitCharges[i] < 0) {
-        debitString += ` - ${tempDebitCharges[i] * -1}  = ${total}`;
+        debitString += ` - ${tempDebitCharges[i] * -1} = ${total}`;
       } else {
         debitString += ` + ${tempDebitCharges[i]} = ${total}`;
       }
@@ -85,7 +84,7 @@ const ExpenseModal: React.FC<Props> = ({
       }
 
       if (tempCreditCharges[i] < 0) {
-        creditString += ` - ${tempCreditCharges[i] * -1}  = ${total}`;
+        creditString += ` - ${tempCreditCharges[i] * -1} = ${total}`;
       } else {
         creditString += ` + ${tempCreditCharges[i]} = ${total}`;
       }
@@ -94,42 +93,44 @@ const ExpenseModal: React.FC<Props> = ({
     setTotal(total);
 
     const calcText: JSX.Element = (
-      <View style={styles.calculationView}>
-        <Text>
-          <Text style={[styles.calculationText, themeColor]}>{amount}</Text>
-          <Text style={[styles.calculationText, {color: 'green'}]}>
-            {debitString}
-          </Text>
+      <Text style={styles.calculationText}>
+        <Text style={themeColor}>{amount}</Text>
+        <Text style={{color: 'green'}}>{debitString}</Text>
 
-          {isDebit ? (
-            <View>
-              <View style={[styles.currentPosition, {borderColor: 'green'}]}>
-                <Text style={[styles.calculationText, themeColor]}>
-                  {` ${operation} ${calculatorInputString} `}
-                </Text>
-              </View>
-            </View>
-          ) : (
-            <></>
-          )}
+        {isDebit ? (
+          <>
+            <Text> </Text>
+            <Text
+              style={[
+                styles.currentPosition,
+                {textDecorationColor: 'green'},
+                themeColor,
+              ]}>
+              {`${operation} ${calculatorInputString}`}
+            </Text>
+          </>
+        ) : (
+          <></>
+        )}
 
-          <Text style={[styles.calculationText, {color: 'red'}]}>
-            {creditString}
-          </Text>
+        <Text style={{color: 'red'}}>{creditString}</Text>
 
-          {!isDebit ? (
-            <View>
-              <View style={[styles.currentPosition, {borderColor: 'red'}]}>
-                <Text style={[styles.calculationText, themeColor]}>
-                  {` ${operation} ${calculatorInputString} `}
-                </Text>
-              </View>
-            </View>
-          ) : (
-            <></>
-          )}
-        </Text>
-      </View>
+        {!isDebit ? (
+          <>
+            <Text> </Text>
+            <Text
+              style={[
+                styles.currentPosition,
+                {textDecorationColor: 'red'},
+                themeColor,
+              ]}>
+              {`${operation} ${calculatorInputString}`}
+            </Text>
+          </>
+        ) : (
+          <></>
+        )}
+      </Text>
     );
 
     setCalculationText(calcText);
@@ -140,6 +141,7 @@ const ExpenseModal: React.FC<Props> = ({
     calculatorInputString,
     isDebit,
     amount,
+    isDarkMode,
   ]);
 
   useEffect(() => {
@@ -194,9 +196,8 @@ const ExpenseModal: React.FC<Props> = ({
   };
 
   const calculate = () => {
-    setIsDecimal(false);
-    setOperation('-');
     setCalculatorInputString('0');
+    setIsDecimal(false);
 
     if (isDebit) {
       setTempDebitCharges(prev => [
@@ -241,7 +242,10 @@ const ExpenseModal: React.FC<Props> = ({
             <Text style={[styles.modalHeaderText, themeColor]}>{category}</Text>
           </View>
           <View style={styles.modalBody}>
-            <ScrollView style={styles.calculationScrollView}>
+            <ScrollView
+              style={styles.calculationScrollView}
+              // contentContainerStyle={styles.calculationView}
+            >
               {calculationText}
             </ScrollView>
             <View style={styles.calculator}>
@@ -552,21 +556,19 @@ const styles = StyleSheet.create({
   calculationScrollView: {
     // flexDirection: 'row',
     // flexWrap: 'wrap',
-    // margin: 10,
+    margin: 10,
   },
   calculationView: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    margin: 10,
+    // flexDirection: 'row',
+    // flexWrap: 'wrap',
+    // margin: 10,
   },
   calculationText: {
     fontSize: 20,
   },
   currentPosition: {
-    marginBottom: -5,
-    marginLeft: 5,
-    minWidth: 35,
-    borderWidth: 1,
+    fontWeight: 'bold',
+    textDecorationLine: 'underline',
   },
   calculator: {
     alignContent: 'space-between',
