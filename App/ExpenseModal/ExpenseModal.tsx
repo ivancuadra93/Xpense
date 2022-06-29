@@ -1,5 +1,8 @@
 import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {
+  Alert,
+  GestureResponderEvent,
+  Keyboard,
   Modal,
   Pressable,
   ScrollView,
@@ -51,10 +54,30 @@ const ExpenseModal: React.FC<Props> = ({
     color: isDarkMode ? 'white' : 'black',
   };
 
-  useLayoutEffect(() => {
+  function handleChargeEdit(
+    i: number,
+    setChargeFunction: React.Dispatch<React.SetStateAction<number[]>>,
+  ) {
+    Alert.alert('Delete Entry', 'Are you sure you want to delete?', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'Delete',
+        onPress: () =>
+          setChargeFunction(prev =>
+            prev.filter((_value: number, index: number) => index !== i),
+          ),
+      },
+    ]);
+  }
+
+  useEffect(() => {
     let total: number = amount;
-    let debitString: string = '';
-    let creditString: string = '';
+    let debitTextComponents: JSX.Element[] = [];
+    let creditTextComponents: JSX.Element[] = [];
 
     for (let i = 0; i < tempDebitCharges.length; i++) {
       total += tempDebitCharges[i];
@@ -67,9 +90,21 @@ const ExpenseModal: React.FC<Props> = ({
       }
 
       if (tempDebitCharges[i] < 0) {
-        debitString += ` - ${tempDebitCharges[i] * -1} = ${total}`;
+        debitTextComponents.push(
+          <Text
+            key={i}
+            onLongPress={() => handleChargeEdit(i, setTempDebitCharges)}>{` - ${
+            tempDebitCharges[i] * -1
+          } = ${total}`}</Text>,
+        );
       } else {
-        debitString += ` + ${tempDebitCharges[i]} = ${total}`;
+        debitTextComponents.push(
+          <Text
+            key={i}
+            onLongPress={() => handleChargeEdit(i, setTempDebitCharges)}>
+            {` + ${tempDebitCharges[i]} = ${total}`}
+          </Text>,
+        );
       }
     }
 
@@ -84,9 +119,21 @@ const ExpenseModal: React.FC<Props> = ({
       }
 
       if (tempCreditCharges[i] < 0) {
-        creditString += ` - ${tempCreditCharges[i] * -1} = ${total}`;
+        creditTextComponents.push(
+          <Text
+            key={i}
+            onLongPress={() =>
+              handleChargeEdit(i, setTempCreditCharges)
+            }>{` - ${tempCreditCharges[i] * -1} = ${total}`}</Text>,
+        );
       } else {
-        creditString += ` + ${tempCreditCharges[i]} = ${total}`;
+        creditTextComponents.push(
+          <Text
+            key={i}
+            onLongPress={() => handleChargeEdit(i, setTempCreditCharges)}>
+            {` + ${tempCreditCharges[i]} = ${total}`}
+          </Text>,
+        );
       }
     }
 
@@ -95,7 +142,7 @@ const ExpenseModal: React.FC<Props> = ({
     const calcText: JSX.Element = (
       <Text style={styles.calculationText}>
         <Text style={themeColor}>{amount}</Text>
-        <Text style={{color: 'green'}}>{debitString}</Text>
+        <Text style={{color: 'green'}}>{debitTextComponents}</Text>
 
         {isDebit ? (
           <>
@@ -113,7 +160,7 @@ const ExpenseModal: React.FC<Props> = ({
           <></>
         )}
 
-        <Text style={{color: 'red'}}>{creditString}</Text>
+        <Text style={{color: 'red'}}>{creditTextComponents}</Text>
 
         {!isDebit ? (
           <>
