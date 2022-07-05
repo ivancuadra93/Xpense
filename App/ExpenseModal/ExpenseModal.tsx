@@ -1,8 +1,6 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Alert,
-  GestureResponderEvent,
-  Keyboard,
   Modal,
   Pressable,
   ScrollView,
@@ -276,9 +274,7 @@ const ExpenseModal: React.FC<Props> = ({
       animationType="slide"
       transparent={true}
       visible={modalVisible}
-      onRequestClose={() => {
-        setModalVisible(!modalVisible);
-      }}>
+      onRequestClose={() => handleCancel()}>
       <View style={styles.centeredView}>
         <Shadow
           distance={15}
