@@ -285,10 +285,7 @@ const ExpenseModal: React.FC<Props> = ({
             <Text style={[styles.modalHeaderText, themeColor]}>{category}</Text>
           </View>
           <View style={styles.modalBody}>
-            <ScrollView
-              style={styles.calculationScrollView}
-              // contentContainerStyle={styles.calculationView}
-            >
+            <ScrollView style={styles.calculationScrollView}>
               {calculationText}
             </ScrollView>
             <View style={styles.calculator}>
@@ -597,14 +594,7 @@ const styles = StyleSheet.create({
     height: 500,
   },
   calculationScrollView: {
-    // flexDirection: 'row',
-    // flexWrap: 'wrap',
     margin: 10,
-  },
-  calculationView: {
-    // flexDirection: 'row',
-    // flexWrap: 'wrap',
-    // margin: 10,
   },
   calculationText: {
     fontSize: 20,
