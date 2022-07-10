@@ -16,7 +16,7 @@ import {
   GoogleSignin,
   GoogleSigninButton,
   statusCodes,
-  User
+  User,
 } from '@react-native-google-signin/google-signin';
 
 import auth from '@react-native-firebase/auth';
@@ -55,7 +55,7 @@ const App = () => {
     // Initial configuration
     GoogleSignin.configure({
       // Mandatory method to call before calling signIn()
-      scopes: ['https://www.googleapis.com/auth/drive.readonly'],
+      scopes: ['https://www.googleapis.com/auth/cloud-platform.read-only'],
       // Repleace with your webClientId
       // Generated from Firebase console
       webClientId:
@@ -144,7 +144,10 @@ const App = () => {
     setGettingLoginStatus(false);
   };
 
-  if (initializing) return null;
+  if (initializing) {
+    console.log('initializing');
+    return null;
+  }
 
   if (!user) {
     if (gettingLoginStatus) {

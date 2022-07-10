@@ -124,7 +124,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
       },
     });
 
-    return () => subscriber();
+    return subscriber;
   }, []);
 
   return (
