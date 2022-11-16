@@ -1,7 +1,10 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+
 import React, {useEffect, useState} from 'react';
 import {
   Alert,
+  Button,
+  DeviceEventEmitter,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -15,6 +18,7 @@ import {
   VirtualizedList,
 } from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
+import {useUserContext} from '../contexts/UserContext';
 import ExpenseList from '../ExpenseList/ExpenseList';
 import {addExpense, getExpenses} from '../firebase/firestore';
 
@@ -33,6 +37,7 @@ import {
 type Props = NativeStackScreenProps<StackParamsList, 'HomeScreen'>;
 
 const HomeScreen: React.FC<Props> = ({navigation, route}) => {
+  const {user} = useUserContext();
   const [listData, setListData] = useState<Expense[]>();
   const [categoryInput, setCategoryInput] = useState<string>('');
   const [amountInput, setAmountInput] = useState<string>('');
@@ -114,18 +119,35 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
   }
 
   useEffect(() => {
-    const subscriber = getExpenses({
-      next: expensesSnapshot => {
-        setListData(
-          expensesSnapshot.docs.map(doc => {
-            return {...doc.data(), ...{id: doc.id}};
-          }) as Expense[],
-        );
-      },
+    navigation.setOptions({
+      headerRight: () => (
+        <Button
+          color={TAN}
+          onPress={() => {
+            DeviceEventEmitter.emit('signOut');
+            navigation.replace('LoginScreen', {welcomeMessage: ''});
+          }}
+          title="Sign Out"
+        />
+      ),
     });
+  });
 
-    return subscriber;
-  }, []);
+  useEffect(() => {
+    if (user) {
+      const subscriber = getExpenses(user.uid, {
+        next: expensesSnapshot => {
+          setListData(
+            expensesSnapshot.docs.map(doc => {
+              return {...doc.data(), ...{id: doc.id}};
+            }) as Expense[],
+          );
+        },
+      });
+
+      return subscriber;
+    }
+  }, [user]);
 
   return (
     <View style={[styles.container, themeBackgroundColor]}>

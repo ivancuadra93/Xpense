@@ -9,6 +9,9 @@ export type StackParamsList = {
   HomeScreen: {
     welcomeMessage: string;
   };
+  LoginScreen: {
+    welcomeMessage: string;
+  };
 };
 
 export type Expense = {

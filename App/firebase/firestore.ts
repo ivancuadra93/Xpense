@@ -40,16 +40,19 @@ export const deleteExpense = (docId: string): Promise<any> => {
     .delete();
 };
 
-export const getExpenses = (observer: {
-  next?: ((snapshot: QuerySnapshot) => void) | undefined;
-  error?: ((error: any) => void) | undefined;
-  complete?: (() => void) | undefined;
-}) => {
-  const user = getUser();
+export const getExpenses = (
+  userId: string,
+  observer: {
+    next?: ((snapshot: QuerySnapshot) => void) | undefined;
+    error?: ((error: any) => void) | undefined;
+    complete?: (() => void) | undefined;
+  },
+) => {
+  // const user = getUser();
 
   return firestore()
     .collection('Users')
-    .doc(user?.uid)
+    .doc(userId)
     .collection('Expenses')
     .onSnapshot(observer);
 };
