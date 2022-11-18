@@ -1,5 +1,5 @@
 import {useTheme} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   GestureResponderEvent,
   Pressable,
@@ -15,10 +15,11 @@ import {Expense, LIST_HEIGHT} from '../Types';
 
 type Props = {
   expense: Expense;
+  setTotals: React.Dispatch<React.SetStateAction<Map<string, number>>>;
 };
 
-const ExpenseList: React.FC<Props> = ({expense}) => {
-  const {id, category, amount, debitCharges, creditCharges} = expense;
+const ExpenseList: React.FC<Props> = ({expense, setTotals}) => {
+  const {id, category, amount} = expense;
 
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [editModalVisible, setEditModalVisible] = useState<boolean>(false);
@@ -34,6 +35,10 @@ const ExpenseList: React.FC<Props> = ({expense}) => {
   const handleListLongPress = () => {
     setEditModalVisible(true);
   };
+
+  useEffect(() => {
+    setTotals(map => new Map(map.set(id, total)));
+  }, [total]);
 
   return (
     <>
