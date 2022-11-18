@@ -1,7 +1,7 @@
 import {useTheme} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {
   Alert,
   Button,
@@ -36,6 +36,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
   const [listData, setListData] = useState<Expense[]>();
   const [categoryInput, setCategoryInput] = useState<string>('');
   const [amountInput, setAmountInput] = useState<string>('');
+  const [totals, setTotals] = useState<Map<string, number>>(new Map());
   const [categoryInputBorder, setCategoryInputBorder] = useState<{
     borderWidth: number;
   }>({borderWidth: 0.5});
@@ -52,6 +53,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
     debitCharges: data[index].debitCharges,
     creditCharges: data[index].creditCharges,
   });
+
   const getItemCount = (data: Expense[]) => (data ? data.length : 0);
 
   const EmtpyItem = () => (
@@ -107,6 +109,16 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
       });
   }
 
+  const total = useMemo(() => {
+    let sum: number = 0;
+
+    totals.forEach(total => {
+      sum += total;
+    });
+
+    return sum;
+  }, [totals]);
+
   useEffect(() => {
     navigation.setOptions({
       headerTitle: 'Xpense',
@@ -143,16 +155,26 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
 
   return (
     <View style={[styles.container, {backgroundColor: myTheme.background}]}>
-      <SafeAreaView style={styles.listContainer}>
-        <VirtualizedList
-          data={listData}
-          getItemCount={getItemCount}
-          getItem={getItem}
-          initialNumToRender={0}
-          renderItem={({item}) => <ExpenseList expense={item} />}
-          ListEmptyComponent={renderEmptyItem}
-          keyExtractor={keyExtractor}
-        />
+      <SafeAreaView
+        style={[styles.container, {backgroundColor: myTheme.background}]}>
+        <View style={styles.listContainer}>
+          <VirtualizedList
+            data={listData}
+            getItemCount={getItemCount}
+            getItem={getItem}
+            initialNumToRender={0}
+            renderItem={({item}) => (
+              <ExpenseList expense={item} setTotals={setTotals} />
+            )}
+            ListEmptyComponent={renderEmptyItem}
+            keyExtractor={keyExtractor}
+          />
+          <View style={styles.totalView}>
+            <Text style={[styles.totalText, {color: myTheme.text}]}>
+              Total: ${total}
+            </Text>
+          </View>
+        </View>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'position' : 'height'}
           keyboardVerticalOffset={100}
@@ -228,14 +250,16 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
 };
 
 let styles = StyleSheet.create({
-  container: {flex: 1},
+  container: {
+    flex: 1,
+    // marginTop: StatusBar.currentHeight,
+  },
   shadowContainer: {
     marginHorizontal: 10,
     marginVertical: 8,
   },
   listContainer: {
     flex: 1,
-    marginTop: StatusBar.currentHeight,
   },
   listItem: {
     height: LIST_HEIGHT,
@@ -245,6 +269,12 @@ let styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 15,
+  },
+  totalView: {
+    margin: 10,
+  },
+  totalText: {
+    fontSize: 30,
   },
   newExpenseView: {
     flex: 0,

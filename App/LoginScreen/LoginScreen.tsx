@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {
-  useColorScheme,
   Alert,
   View,
   ActivityIndicator,
@@ -17,10 +15,10 @@ import {
   statusCodes,
   GoogleSigninButton,
 } from '@react-native-google-signin/google-signin';
+import {useTheme} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 
 import {StackParamsList} from '../Types';
-import {useTheme} from '@react-navigation/native';
 
 type Props = NativeStackScreenProps<StackParamsList, 'LoginScreen'>;
 
