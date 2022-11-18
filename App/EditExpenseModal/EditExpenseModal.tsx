@@ -1,3 +1,4 @@
+import {useTheme} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   Alert,
@@ -6,20 +7,12 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  useColorScheme,
   View,
 } from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
 
 import {deleteExpense, updateExpense} from '../firebase/firestore';
-import {
-  DARK_GRAY,
-  Expense,
-  FirestoreExpense,
-  LIGHT_GRAY,
-  OFF_WHITE,
-  PURPLE,
-} from '../Types';
+import {Expense, FirestoreExpense} from '../Types';
 
 type Props = {
   expense: Expense;
@@ -36,6 +29,7 @@ const EditExpenseModal: React.FC<Props> = ({
 }) => {
   const {id, category, amount, debitCharges, creditCharges} = expense;
 
+  const myTheme = useTheme().colors;
   const [categoryInput, setCategoryInput] = useState<string>('');
   const [amountInput, setAmountInput] = useState<string>('');
   const [tempDebitCharges, setTempDebitCharges] =
@@ -48,14 +42,6 @@ const EditExpenseModal: React.FC<Props> = ({
   const [amountInputBorder, setAmountInputBorder] = useState<{
     borderWidth: number;
   }>({borderWidth: 0.5});
-
-  const isDarkMode = useColorScheme() === 'dark';
-  const themeBackgroundColor = {
-    backgroundColor: isDarkMode ? DARK_GRAY : OFF_WHITE,
-  };
-  const themeColor = {
-    color: isDarkMode ? 'white' : 'black',
-  };
 
   const handleDelete = () => {
     Alert.alert(
@@ -203,40 +189,51 @@ const EditExpenseModal: React.FC<Props> = ({
           radius={20}
           viewStyle={styles.modalView}
           containerViewStyle={styles.modalShadowContainer}>
-          <View style={styles.modalHeader}>
-            <Text style={[styles.modalHeaderText, themeColor]}>
+          <View
+            style={[styles.modalHeader, {backgroundColor: myTheme.primary}]}>
+            <Text style={[styles.modalHeaderText, {color: myTheme.text}]}>
               Edit: {category}
             </Text>
           </View>
-          <View style={styles.modalBody}>
-            <Text style={[styles.totalText, themeColor]}>Total: {total}</Text>
+          <View style={[styles.modalBody, {backgroundColor: myTheme.card}]}>
+            <Text style={[styles.totalText, {color: myTheme.text}]}>
+              Total: {total}
+            </Text>
             <View style={styles.editOptions}>
               <Pressable
                 style={[styles.optionPressable, {backgroundColor: 'red'}]}
                 onPress={() => handleDelete()}>
-                <Text style={[styles.modalBodyText, themeColor]}>Delete</Text>
+                <Text style={[styles.modalBodyText, {color: myTheme.text}]}>
+                  Delete
+                </Text>
               </Pressable>
               <Pressable
                 style={[styles.optionPressable, {backgroundColor: 'green'}]}
                 onPress={() => handleReset()}>
-                <Text style={[styles.modalBodyText, themeColor]}>Reset</Text>
+                <Text style={[styles.modalBodyText, {color: myTheme.text}]}>
+                  Reset
+                </Text>
               </Pressable>
               <Pressable
                 style={[styles.optionPressable, {backgroundColor: 'blue'}]}
                 onPress={() => handleRollover()}>
-                <Text style={[styles.modalBodyText, themeColor]}>Rollover</Text>
+                <Text style={[styles.modalBodyText, {color: myTheme.text}]}>
+                  Rollover
+                </Text>
               </Pressable>
             </View>
             <View style={styles.updateExpenseContainer}>
               <View style={styles.updateLabelView}>
                 <View style={{flexDirection: 'column'}}>
                   <View style={styles.updateCategoryLabel}>
-                    <Text style={[styles.updateLabelText, themeColor]}>
+                    <Text
+                      style={[styles.updateLabelText, {color: myTheme.text}]}>
                       Update Category Name:
                     </Text>
                   </View>
                   <View style={styles.updateAmountLabel}>
-                    <Text style={[styles.updateLabelText, themeColor]}>
+                    <Text
+                      style={[styles.updateLabelText, {color: myTheme.text}]}>
                       Update Initial Amount:
                     </Text>
                   </View>
@@ -246,7 +243,7 @@ const EditExpenseModal: React.FC<Props> = ({
                 <TextInput
                   style={[
                     styles.updateExpenseTextInput,
-                    themeColor,
+                    {color: myTheme.text},
                     categoryInputBorder,
                   ]}
                   onChangeText={setCategoryInput}
@@ -258,7 +255,7 @@ const EditExpenseModal: React.FC<Props> = ({
                 <TextInput
                   style={[
                     styles.updateExpenseTextInput,
-                    themeColor,
+                    {color: myTheme.text},
                     amountInputBorder,
                   ]}
                   onChangeText={setAmountInput}
@@ -270,16 +267,24 @@ const EditExpenseModal: React.FC<Props> = ({
               </View>
             </View>
           </View>
-          <View style={styles.modalFooter}>
+          <View style={[styles.modalFooter, {backgroundColor: myTheme.card}]}>
             <Pressable
               style={[styles.footerPressables, styles.cancelPressable]}
               onPress={() => handleCancel()}>
-              <Text style={[styles.textStyle, themeColor]}>Cancel</Text>
+              <Text style={[styles.textStyle, {color: myTheme.text}]}>
+                Cancel
+              </Text>
             </Pressable>
             <Pressable
-              style={[styles.footerPressables, styles.savePressable]}
+              style={[
+                styles.footerPressables,
+                styles.savePressable,
+                {backgroundColor: myTheme.primary},
+              ]}
               onPress={() => handleUpdate(categoryInput, amountInput)}>
-              <Text style={[styles.textStyle, themeColor]}>Update</Text>
+              <Text style={[styles.textStyle, {color: myTheme.text}]}>
+                Update
+              </Text>
             </Pressable>
           </View>
         </Shadow>
@@ -302,7 +307,6 @@ const styles = StyleSheet.create({
   },
   modalHeader: {
     justifyContent: 'center',
-    backgroundColor: PURPLE,
     height: 60,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -312,7 +316,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   modalBody: {
-    backgroundColor: LIGHT_GRAY,
     height: 350,
   },
   totalText: {
@@ -364,7 +367,6 @@ const styles = StyleSheet.create({
   modalFooter: {
     flexDirection: 'row',
     height: 60,
-    backgroundColor: LIGHT_GRAY,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
     justifyContent: 'space-evenly',
@@ -375,7 +377,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cancelPressable: {backgroundColor: 'gray', borderBottomLeftRadius: 20},
-  savePressable: {backgroundColor: PURPLE, borderBottomRightRadius: 20},
+  savePressable: {borderBottomRightRadius: 20},
   textStyle: {
     fontWeight: 'bold',
     textAlign: 'center',

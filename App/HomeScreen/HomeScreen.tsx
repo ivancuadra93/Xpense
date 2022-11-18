@@ -1,3 +1,4 @@
+import {useTheme} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import React, {useEffect, useState} from 'react';
@@ -13,7 +14,6 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  useColorScheme,
   View,
   VirtualizedList,
 } from 'react-native';
@@ -23,15 +23,10 @@ import ExpenseList from '../ExpenseList/ExpenseList';
 import {addExpense, getExpenses} from '../firebase/firestore';
 
 import {
-  DARK_GRAY,
   Expense,
   FirestoreExpense,
-  LIGHT_GRAY,
   LIST_HEIGHT,
-  OFF_WHITE,
-  PURPLE,
   StackParamsList,
-  TAN,
 } from '../Types';
 
 type Props = NativeStackScreenProps<StackParamsList, 'HomeScreen'>;
@@ -48,13 +43,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
     borderWidth: number;
   }>({borderWidth: 0.5});
 
-  const isDarkMode = useColorScheme() === 'dark';
-  const themeBackgroundColor = {
-    backgroundColor: isDarkMode ? DARK_GRAY : OFF_WHITE,
-  };
-  const themeColor = {
-    color: isDarkMode ? 'white' : 'black',
-  };
+  const myTheme = useTheme().colors;
 
   const getItem = (data: Expense[], index: number) => ({
     id: data[index].id,
@@ -68,12 +57,12 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
   const EmtpyItem = () => (
     <Shadow
       distance={5}
-      startColor={LIGHT_GRAY}
+      startColor={useTheme().colors.border}
       radius={8}
       viewStyle={{width: '100%'}}
       containerViewStyle={styles.shadowContainer}>
       <View style={styles.listItem}>
-        <Text style={[styles.itemText, themeColor]}>
+        <Text style={[styles.itemText, {color: myTheme.text}]}>
           Enter a new expense below...
         </Text>
       </View>
@@ -120,9 +109,12 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
 
   useEffect(() => {
     navigation.setOptions({
+      headerTitle: 'Xpense',
+      headerStyle: {backgroundColor: myTheme.primary},
+      headerTintColor: myTheme.text,
       headerRight: () => (
         <Button
-          color={TAN}
+          color={myTheme.card}
           onPress={() => {
             DeviceEventEmitter.emit('signOut');
             navigation.replace('LoginScreen', {welcomeMessage: ''});
@@ -131,7 +123,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
         />
       ),
     });
-  });
+  }, [myTheme]);
 
   useEffect(() => {
     if (user) {
@@ -150,7 +142,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
   }, [user]);
 
   return (
-    <View style={[styles.container, themeBackgroundColor]}>
+    <View style={[styles.container, {backgroundColor: myTheme.background}]}>
       <SafeAreaView style={styles.listContainer}>
         <VirtualizedList
           data={listData}
@@ -166,32 +158,45 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
           keyboardVerticalOffset={100}
           style={styles.newExpenseView}>
           <Shadow distance={10} radius={20} viewStyle={{width: '100%'}}>
-            <View style={styles.newExpenseHeaderView}>
-              <Text style={[styles.newExpenseHeaderText, themeColor]}>
+            <View
+              style={[
+                styles.newExpenseHeaderView,
+                {backgroundColor: myTheme.primary},
+              ]}>
+              <Text
+                style={[styles.newExpenseHeaderText, {color: myTheme.text}]}>
                 Enter a New Expense
               </Text>
             </View>
-            <View style={styles.newExpenseInputsView}>
+            <View
+              style={[
+                styles.newExpenseInputsView,
+                {backgroundColor: myTheme.card},
+              ]}>
               <TextInput
                 style={[
                   styles.newExpenseInput,
-                  themeColor,
+                  {backgroundColor: myTheme.background, color: myTheme.text},
                   categoryInputBorder,
                 ]}
                 onChangeText={setCategoryInput}
                 value={categoryInput}
                 placeholder="Category"
-                placeholderTextColor={themeColor.color}
+                placeholderTextColor={myTheme.text}
                 keyboardType="default"
                 onFocus={() => setCategoryInputBorder({borderWidth: 1})}
                 onBlur={() => setCategoryInputBorder({borderWidth: 0.5})}
               />
               <TextInput
-                style={[styles.newExpenseInput, themeColor, amountInputBorder]}
+                style={[
+                  styles.newExpenseInput,
+                  {backgroundColor: myTheme.background, color: myTheme.text},
+                  amountInputBorder,
+                ]}
                 onChangeText={setAmountInput}
                 value={amountInput}
                 placeholder="Amount"
-                placeholderTextColor={themeColor.color}
+                placeholderTextColor={myTheme.text}
                 keyboardType="numeric"
                 onFocus={() => setAmountInputBorder({borderWidth: 1})}
                 onBlur={() => setAmountInputBorder({borderWidth: 0.5})}
@@ -199,12 +204,17 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
               <Shadow distance={10} radius={0} viewStyle={{width: '100%'}}>
                 <Pressable
                   onPress={() => createExpense(categoryInput, amountInput)}
-                  style={({pressed}) =>
+                  style={({pressed}) => [
                     pressed
                       ? styles.newExpenseSubmitPressed
-                      : styles.newExpenseSubmitNotPressed
-                  }>
-                  <Text style={[styles.newExpenseSubmitText, themeColor]}>
+                      : styles.newExpenseSubmitNotPressed,
+                    {backgroundColor: myTheme.card},
+                  ]}>
+                  <Text
+                    style={[
+                      styles.newExpenseSubmitText,
+                      {color: myTheme.text},
+                    ]}>
                     Submit
                   </Text>
                 </Pressable>
@@ -244,7 +254,6 @@ let styles = StyleSheet.create({
   },
   newExpenseHeaderView: {
     justifyContent: 'center',
-    backgroundColor: PURPLE,
     height: 40,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -259,7 +268,6 @@ let styles = StyleSheet.create({
     height: 60,
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    backgroundColor: LIGHT_GRAY,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
   },
@@ -273,14 +281,12 @@ let styles = StyleSheet.create({
     padding: 5,
     borderWidth: 1,
     justifyContent: 'center',
-    backgroundColor: TAN,
   },
   newExpenseSubmitPressed: {
     height: 40,
     padding: 5,
     borderWidth: 1,
     justifyContent: 'center',
-    backgroundColor: TAN,
     opacity: 0.5,
   },
   newExpenseSubmitText: {

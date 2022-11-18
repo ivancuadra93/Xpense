@@ -1,45 +1,58 @@
 import React from 'react';
-import {Button, useColorScheme} from 'react-native';
+import {useColorScheme} from 'react-native';
 
-import {NavigationContainer} from '@react-navigation/native';
+import {
+  DefaultTheme,
+  DarkTheme,
+  NavigationContainer,
+  useTheme,
+  Theme,
+} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import HomeScreen from './App/HomeScreen/HomeScreen';
 import LoginScreen from './App/LoginScreen/LoginScreen';
-import {PURPLE, StackParamsList, TAN} from './App/Types';
+import {StackParamsList} from './App/Types';
 import {UserAuthProvider} from './App/contexts/UserContext';
 
 const Stack = createNativeStackNavigator<StackParamsList>();
 
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
+  const scheme = useColorScheme();
 
-  const themeColor = {
-    color: isDarkMode ? 'white' : 'black',
+  const MyDefaultTheme: Theme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      primary: '#a49afc', // purple
+      background: '#e5e3f3', // off-white
+      text: 'black',
+      card: '#b5b5b5', // light-gray
+      border: 'gray',
+    },
+    dark: false,
+  };
+
+  const MyDarkTheme: Theme = {
+    ...DarkTheme,
+    colors: {
+      ...DarkTheme.colors,
+      primary: '#a49afc', // purple
+      background: '#5c5a5b', // dark-gray
+      text: 'white',
+      card: '#b5b5b5', // light-gray
+      border: 'gray',
+    },
+    dark: true,
   };
 
   return (
     <UserAuthProvider>
-      <NavigationContainer>
+      <NavigationContainer
+        theme={scheme === 'dark' ? MyDarkTheme : MyDefaultTheme}>
         <Stack.Navigator>
-          <Stack.Screen
-            name="LoginScreen"
-            component={LoginScreen}
-            options={{
-              headerTitle: 'Log In',
-              headerStyle: {backgroundColor: PURPLE},
-              headerTintColor: themeColor.color,
-            }}
-          />
-          <Stack.Screen
-            name="HomeScreen"
-            component={HomeScreen}
-            options={{
-              headerTitle: 'Xpense',
-              headerStyle: {backgroundColor: PURPLE},
-              headerTintColor: themeColor.color,
-            }}
-          />
+          <Stack.Screen name="LoginScreen" component={LoginScreen} />
+          <Stack.Screen name="HomeScreen" component={HomeScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </UserAuthProvider>

@@ -1,3 +1,4 @@
+import {useTheme} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {
   GestureResponderEvent,
@@ -5,13 +6,12 @@ import {
   StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
 } from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
 import EditExpenseModal from '../EditExpenseModal/EditExpenseModal';
 
 import ExpenseModal from '../ExpenseModal/ExpenseModal';
-import {Expense, LIGHT_GRAY, LIST_HEIGHT} from '../Types';
+import {Expense, LIST_HEIGHT} from '../Types';
 
 type Props = {
   expense: Expense;
@@ -25,10 +25,7 @@ const ExpenseList: React.FC<Props> = ({expense}) => {
 
   const [total, setTotal] = useState<number>(amount);
 
-  const isDarkMode = useColorScheme() === 'dark';
-  const themeColor = {
-    color: isDarkMode ? 'white' : 'black',
-  };
+  const myTheme = useTheme().colors;
 
   const handleListPress = (_event: GestureResponderEvent) => {
     setModalVisible(true);
@@ -54,17 +51,19 @@ const ExpenseList: React.FC<Props> = ({expense}) => {
       />
       <Shadow
         distance={5}
-        startColor={LIGHT_GRAY}
+        startColor={myTheme.border}
         radius={8}
         viewStyle={{width: '100%'}}
         containerViewStyle={styles.shadowContainer}>
         <Pressable
           style={({pressed}) =>
-            pressed ? styles.listPressed : styles.listNotPressed
+            pressed
+              ? [styles.listPressed, {backgroundColor: myTheme.card}]
+              : styles.listNotPressed
           }
           onPress={handleListPress}
           onLongPress={handleListLongPress}>
-          <Text style={[styles.itemText, themeColor]}>
+          <Text style={[styles.itemText, {color: myTheme.text}]}>
             {category}: {total}
           </Text>
         </Pressable>
@@ -93,7 +92,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 8,
     paddingLeft: 8,
-    backgroundColor: LIGHT_GRAY,
   },
   listNotPressed: {
     height: LIST_HEIGHT,
