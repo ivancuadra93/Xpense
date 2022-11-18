@@ -20,6 +20,7 @@ import {
 import auth from '@react-native-firebase/auth';
 
 import {StackParamsList} from '../Types';
+import {useTheme} from '@react-navigation/native';
 
 type Props = NativeStackScreenProps<StackParamsList, 'LoginScreen'>;
 
@@ -27,10 +28,8 @@ const LoginScreen: React.FC<Props> = ({route, navigation}: Props) => {
   const [userInfo, setUserInfo] = useState<User>();
   const [gettingLoginStatus, setGettingLoginStatus] = useState<boolean>(true);
 
-  const isDarkMode = useColorScheme() === 'dark';
-  const themeBackgroundColor = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+  const myTheme = useTheme().colors;
+  const isDarkMode = useTheme().dark;
 
   DeviceEventEmitter.addListener('signOut', () => _signOut());
 
@@ -47,6 +46,14 @@ const LoginScreen: React.FC<Props> = ({route, navigation}: Props) => {
     // Check if user is already signed in
     _isSignedIn();
   }, []);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: 'Log In',
+      headerStyle: {backgroundColor: myTheme.primary},
+      headerTintColor: myTheme.text,
+    });
+  }, [myTheme]);
 
   const _isSignedIn = async () => {
     const isSignedIn = await GoogleSignin.isSignedIn();
@@ -136,8 +143,10 @@ const LoginScreen: React.FC<Props> = ({route, navigation}: Props) => {
   } else {
     return (
       <SafeAreaView style={{flex: 1}}>
-        <View style={{...styles.container, ...themeBackgroundColor}}>
-          <Text style={styles.titleText}>Google Sign-In</Text>
+        <View style={[styles.container, {backgroundColor: myTheme.background}]}>
+          <Text style={[styles.titleText, {color: myTheme.text}]}>
+            Google Sign-In
+          </Text>
           <View style={styles.container}>
             {userInfo ? (
               <></>

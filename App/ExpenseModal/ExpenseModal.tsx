@@ -6,13 +6,13 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
 } from 'react-native';
+import {useTheme} from '@react-navigation/native';
 import {Shadow} from 'react-native-shadow-2';
 
 import {updateCharges} from '../firebase/firestore';
-import {DARK_GRAY, Expense, LIGHT_GRAY, OFF_WHITE, PURPLE} from '../Types';
+import {Expense} from '../Types';
 
 type Props = {
   expense: Expense;
@@ -28,7 +28,7 @@ const ExpenseModal: React.FC<Props> = ({
   setModalVisible,
 }) => {
   const {id, category, amount, debitCharges, creditCharges} = expense;
-
+  const myTheme = useTheme().colors;
   const [calculationText, setCalculationText] = useState<JSX.Element>(
     <Text></Text>,
   );
@@ -43,14 +43,6 @@ const ExpenseModal: React.FC<Props> = ({
   const [tempCreditCharges, setTempCreditCharges] = useState<number[]>([
     ...creditCharges,
   ]);
-
-  const isDarkMode = useColorScheme() === 'dark';
-  const themeBackgroundColor = {
-    backgroundColor: isDarkMode ? DARK_GRAY : OFF_WHITE,
-  };
-  const themeColor = {
-    color: isDarkMode ? 'white' : 'black',
-  };
 
   function handleChargeEdit(
     i: number,
@@ -139,7 +131,7 @@ const ExpenseModal: React.FC<Props> = ({
 
     const calcText: JSX.Element = (
       <Text style={styles.calculationText}>
-        <Text style={themeColor}>{amount}</Text>
+        <Text style={{color: myTheme.text}}>{amount}</Text>
         <Text style={{color: 'green'}}>{debitTextComponents}</Text>
 
         {isDebit ? (
@@ -149,7 +141,7 @@ const ExpenseModal: React.FC<Props> = ({
               style={[
                 styles.currentPosition,
                 {textDecorationColor: 'green'},
-                themeColor,
+                {color: myTheme.text},
               ]}>
               {`${operation} ${calculatorInputString}`}
             </Text>
@@ -167,7 +159,7 @@ const ExpenseModal: React.FC<Props> = ({
               style={[
                 styles.currentPosition,
                 {textDecorationColor: 'red'},
-                themeColor,
+                {color: myTheme.text},
               ]}>
               {`${operation} ${calculatorInputString}`}
             </Text>
@@ -186,7 +178,7 @@ const ExpenseModal: React.FC<Props> = ({
     calculatorInputString,
     isDebit,
     amount,
-    isDarkMode,
+    myTheme,
   ]);
 
   useEffect(() => {
@@ -281,10 +273,13 @@ const ExpenseModal: React.FC<Props> = ({
           radius={20}
           viewStyle={styles.modalView}
           containerViewStyle={styles.modalShadowContainer}>
-          <View style={styles.modalHeader}>
-            <Text style={[styles.modalHeaderText, themeColor]}>{category}</Text>
+          <View
+            style={[styles.modalHeader, {backgroundColor: myTheme.primary}]}>
+            <Text style={[styles.modalHeaderText, {color: myTheme.text}]}>
+              {category}
+            </Text>
           </View>
-          <View style={styles.modalBody}>
+          <View style={[styles.modalBody, {backgroundColor: myTheme.card}]}>
             <ScrollView style={styles.calculationScrollView}>
               {calculationText}
             </ScrollView>
@@ -299,10 +294,16 @@ const ExpenseModal: React.FC<Props> = ({
                     style={({pressed}) =>
                       pressed
                         ? [styles.calculatorPressable]
-                        : [styles.calculatorPressable, themeBackgroundColor]
+                        : [
+                            styles.calculatorPressable,
+                            {backgroundColor: myTheme.background},
+                          ]
                     }
                     onPress={() => appendNum(1)}>
-                    <Text style={[styles.calculatorText, themeColor]}>1</Text>
+                    <Text
+                      style={[styles.calculatorText, {color: myTheme.text}]}>
+                      1
+                    </Text>
                   </Pressable>
                 </Shadow>
                 <Shadow
@@ -314,10 +315,16 @@ const ExpenseModal: React.FC<Props> = ({
                     style={({pressed}) =>
                       pressed
                         ? [styles.calculatorPressable]
-                        : [styles.calculatorPressable, themeBackgroundColor]
+                        : [
+                            styles.calculatorPressable,
+                            {backgroundColor: myTheme.background},
+                          ]
                     }
                     onPress={() => appendNum(2)}>
-                    <Text style={[styles.calculatorText, themeColor]}>2</Text>
+                    <Text
+                      style={[styles.calculatorText, {color: myTheme.text}]}>
+                      2
+                    </Text>
                   </Pressable>
                 </Shadow>
                 <Shadow
@@ -329,10 +336,16 @@ const ExpenseModal: React.FC<Props> = ({
                     style={({pressed}) =>
                       pressed
                         ? [styles.calculatorPressable]
-                        : [styles.calculatorPressable, themeBackgroundColor]
+                        : [
+                            styles.calculatorPressable,
+                            {backgroundColor: myTheme.background},
+                          ]
                     }
                     onPress={() => appendNum(3)}>
-                    <Text style={[styles.calculatorText, themeColor]}>3</Text>
+                    <Text
+                      style={[styles.calculatorText, {color: myTheme.text}]}>
+                      3
+                    </Text>
                   </Pressable>
                 </Shadow>
                 <Shadow
@@ -344,10 +357,16 @@ const ExpenseModal: React.FC<Props> = ({
                     style={({pressed}) =>
                       pressed
                         ? [styles.calculatorPressable]
-                        : [styles.calculatorPressable, themeBackgroundColor]
+                        : [
+                            styles.calculatorPressable,
+                            {backgroundColor: myTheme.background},
+                          ]
                     }
                     onPress={() => setOperation('+')}>
-                    <Text style={[styles.calculatorText, themeColor]}>+</Text>
+                    <Text
+                      style={[styles.calculatorText, {color: myTheme.text}]}>
+                      +
+                    </Text>
                   </Pressable>
                 </Shadow>
               </View>
@@ -361,10 +380,16 @@ const ExpenseModal: React.FC<Props> = ({
                     style={({pressed}) =>
                       pressed
                         ? [styles.calculatorPressable]
-                        : [styles.calculatorPressable, themeBackgroundColor]
+                        : [
+                            styles.calculatorPressable,
+                            {backgroundColor: myTheme.background},
+                          ]
                     }
                     onPress={() => appendNum(4)}>
-                    <Text style={[styles.calculatorText, themeColor]}>4</Text>
+                    <Text
+                      style={[styles.calculatorText, {color: myTheme.text}]}>
+                      4
+                    </Text>
                   </Pressable>
                 </Shadow>
                 <Shadow
@@ -376,10 +401,16 @@ const ExpenseModal: React.FC<Props> = ({
                     style={({pressed}) =>
                       pressed
                         ? [styles.calculatorPressable]
-                        : [styles.calculatorPressable, themeBackgroundColor]
+                        : [
+                            styles.calculatorPressable,
+                            {backgroundColor: myTheme.background},
+                          ]
                     }
                     onPress={() => appendNum(5)}>
-                    <Text style={[styles.calculatorText, themeColor]}>5</Text>
+                    <Text
+                      style={[styles.calculatorText, {color: myTheme.text}]}>
+                      5
+                    </Text>
                   </Pressable>
                 </Shadow>
                 <Shadow
@@ -391,10 +422,16 @@ const ExpenseModal: React.FC<Props> = ({
                     style={({pressed}) =>
                       pressed
                         ? [styles.calculatorPressable]
-                        : [styles.calculatorPressable, themeBackgroundColor]
+                        : [
+                            styles.calculatorPressable,
+                            {backgroundColor: myTheme.background},
+                          ]
                     }
                     onPress={() => appendNum(6)}>
-                    <Text style={[styles.calculatorText, themeColor]}>6</Text>
+                    <Text
+                      style={[styles.calculatorText, {color: myTheme.text}]}>
+                      6
+                    </Text>
                   </Pressable>
                 </Shadow>
                 <Shadow
@@ -406,10 +443,16 @@ const ExpenseModal: React.FC<Props> = ({
                     style={({pressed}) =>
                       pressed
                         ? [styles.calculatorPressable]
-                        : [styles.calculatorPressable, themeBackgroundColor]
+                        : [
+                            styles.calculatorPressable,
+                            {backgroundColor: myTheme.background},
+                          ]
                     }
                     onPress={() => setOperation('-')}>
-                    <Text style={[styles.calculatorText, themeColor]}>-</Text>
+                    <Text
+                      style={[styles.calculatorText, {color: myTheme.text}]}>
+                      -
+                    </Text>
                   </Pressable>
                 </Shadow>
               </View>
@@ -423,10 +466,16 @@ const ExpenseModal: React.FC<Props> = ({
                     style={({pressed}) =>
                       pressed
                         ? [styles.calculatorPressable]
-                        : [styles.calculatorPressable, themeBackgroundColor]
+                        : [
+                            styles.calculatorPressable,
+                            {backgroundColor: myTheme.background},
+                          ]
                     }
                     onPress={() => appendNum(7)}>
-                    <Text style={[styles.calculatorText, themeColor]}>7</Text>
+                    <Text
+                      style={[styles.calculatorText, {color: myTheme.text}]}>
+                      7
+                    </Text>
                   </Pressable>
                 </Shadow>
                 <Shadow
@@ -438,10 +487,16 @@ const ExpenseModal: React.FC<Props> = ({
                     style={({pressed}) =>
                       pressed
                         ? [styles.calculatorPressable]
-                        : [styles.calculatorPressable, themeBackgroundColor]
+                        : [
+                            styles.calculatorPressable,
+                            {backgroundColor: myTheme.background},
+                          ]
                     }
                     onPress={() => appendNum(8)}>
-                    <Text style={[styles.calculatorText, themeColor]}>8</Text>
+                    <Text
+                      style={[styles.calculatorText, {color: myTheme.text}]}>
+                      8
+                    </Text>
                   </Pressable>
                 </Shadow>
                 <Shadow
@@ -453,10 +508,16 @@ const ExpenseModal: React.FC<Props> = ({
                     style={({pressed}) =>
                       pressed
                         ? [styles.calculatorPressable]
-                        : [styles.calculatorPressable, themeBackgroundColor]
+                        : [
+                            styles.calculatorPressable,
+                            {backgroundColor: myTheme.background},
+                          ]
                     }
                     onPress={() => appendNum(9)}>
-                    <Text style={[styles.calculatorText, themeColor]}>9</Text>
+                    <Text
+                      style={[styles.calculatorText, {color: myTheme.text}]}>
+                      9
+                    </Text>
                   </Pressable>
                 </Shadow>
                 <Shadow
@@ -468,10 +529,14 @@ const ExpenseModal: React.FC<Props> = ({
                     style={({pressed}) =>
                       pressed
                         ? [styles.calculatorPressable]
-                        : [styles.calculatorPressable, themeBackgroundColor]
+                        : [
+                            styles.calculatorPressable,
+                            {backgroundColor: myTheme.background},
+                          ]
                     }
                     onPress={() => backSpace()}>
-                    <Text style={[styles.calculatorText, themeColor]}>
+                    <Text
+                      style={[styles.calculatorText, {color: myTheme.text}]}>
                       {'<-'}
                     </Text>
                   </Pressable>
@@ -487,7 +552,10 @@ const ExpenseModal: React.FC<Props> = ({
                     style={({pressed}) =>
                       pressed
                         ? [styles.calculatorPressable]
-                        : [styles.calculatorPressable, themeBackgroundColor]
+                        : [
+                            styles.calculatorPressable,
+                            {backgroundColor: myTheme.background},
+                          ]
                     }
                     onPress={() => setIsDebit(!isDebit)}>
                     <Text
@@ -508,10 +576,16 @@ const ExpenseModal: React.FC<Props> = ({
                     style={({pressed}) =>
                       pressed
                         ? [styles.calculatorPressable]
-                        : [styles.calculatorPressable, themeBackgroundColor]
+                        : [
+                            styles.calculatorPressable,
+                            {backgroundColor: myTheme.background},
+                          ]
                     }
                     onPress={() => appendNum(0)}>
-                    <Text style={[styles.calculatorText, themeColor]}>0</Text>
+                    <Text
+                      style={[styles.calculatorText, {color: myTheme.text}]}>
+                      0
+                    </Text>
                   </Pressable>
                 </Shadow>
                 <Shadow
@@ -523,10 +597,16 @@ const ExpenseModal: React.FC<Props> = ({
                     style={({pressed}) =>
                       pressed
                         ? [styles.calculatorPressable]
-                        : [styles.calculatorPressable, themeBackgroundColor]
+                        : [
+                            styles.calculatorPressable,
+                            {backgroundColor: myTheme.background},
+                          ]
                     }
                     onPress={() => addDecimal()}>
-                    <Text style={[styles.calculatorText, themeColor]}>.</Text>
+                    <Text
+                      style={[styles.calculatorText, {color: myTheme.text}]}>
+                      .
+                    </Text>
                   </Pressable>
                 </Shadow>
                 <Shadow
@@ -538,25 +618,39 @@ const ExpenseModal: React.FC<Props> = ({
                     style={({pressed}) =>
                       pressed
                         ? [styles.calculatorPressable]
-                        : [styles.calculatorPressable, themeBackgroundColor]
+                        : [
+                            styles.calculatorPressable,
+                            {backgroundColor: myTheme.background},
+                          ]
                     }
                     onPress={() => calculate()}>
-                    <Text style={[styles.calculatorText, themeColor]}>=</Text>
+                    <Text
+                      style={[styles.calculatorText, {color: myTheme.text}]}>
+                      =
+                    </Text>
                   </Pressable>
                 </Shadow>
               </View>
             </View>
           </View>
-          <View style={styles.modalFooter}>
+          <View style={[styles.modalFooter, {backgroundColor: myTheme.card}]}>
             <Pressable
               style={[styles.footerPressables, styles.cancelPressable]}
               onPress={() => handleCancel()}>
-              <Text style={[styles.textStyle, themeColor]}>Cancel</Text>
+              <Text style={[styles.textStyle, {color: myTheme.text}]}>
+                Cancel
+              </Text>
             </Pressable>
             <Pressable
-              style={[styles.footerPressables, styles.savePressable]}
+              style={[
+                styles.footerPressables,
+                styles.savePressable,
+                {backgroundColor: myTheme.primary},
+              ]}
               onPress={() => handleSave()}>
-              <Text style={[styles.textStyle, themeColor]}>Save</Text>
+              <Text style={[styles.textStyle, {color: myTheme.text}]}>
+                Save
+              </Text>
             </Pressable>
           </View>
         </Shadow>
@@ -579,7 +673,6 @@ const styles = StyleSheet.create({
   },
   modalHeader: {
     justifyContent: 'center',
-    backgroundColor: PURPLE,
     height: 60,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -590,7 +683,6 @@ const styles = StyleSheet.create({
   },
   modalBody: {
     justifyContent: 'space-evenly',
-    backgroundColor: LIGHT_GRAY,
     height: 500,
   },
   calculationScrollView: {
@@ -625,7 +717,6 @@ const styles = StyleSheet.create({
   modalFooter: {
     flexDirection: 'row',
     height: 60,
-    backgroundColor: LIGHT_GRAY,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
     justifyContent: 'space-evenly',
@@ -636,7 +727,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cancelPressable: {backgroundColor: 'gray', borderBottomLeftRadius: 20},
-  savePressable: {backgroundColor: PURPLE, borderBottomRightRadius: 20},
+  savePressable: {borderBottomRightRadius: 20},
   textStyle: {
     fontWeight: 'bold',
     textAlign: 'center',
