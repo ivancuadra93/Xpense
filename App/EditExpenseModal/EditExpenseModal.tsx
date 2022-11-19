@@ -186,9 +186,8 @@ const EditExpenseModal: React.FC<Props> = ({
       <View style={styles.centeredView}>
         <Shadow
           distance={15}
-          radius={20}
-          viewStyle={styles.modalView}
-          containerViewStyle={styles.modalShadowContainer}>
+          style={styles.modalView}
+          containerStyle={styles.modalShadowContainer}>
           <View
             style={[styles.modalHeader, {backgroundColor: myTheme.primary}]}>
             <Text style={[styles.modalHeaderText, {color: myTheme.text}]}>

@@ -5,7 +5,6 @@ import {
   DefaultTheme,
   DarkTheme,
   NavigationContainer,
-  useTheme,
   Theme,
 } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';

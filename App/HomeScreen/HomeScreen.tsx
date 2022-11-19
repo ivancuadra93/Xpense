@@ -60,9 +60,8 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
     <Shadow
       distance={5}
       startColor={useTheme().colors.border}
-      radius={8}
-      viewStyle={{width: '100%'}}
-      containerViewStyle={styles.shadowContainer}>
+      style={{width: '100%', borderRadius: 8}}
+      containerStyle={styles.shadowContainer}>
       <View style={styles.listItem}>
         <Text style={[styles.itemText, {color: myTheme.text}]}>
           Enter a new expense below...
@@ -179,7 +178,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
           behavior={Platform.OS === 'ios' ? 'position' : 'height'}
           keyboardVerticalOffset={100}
           style={styles.newExpenseView}>
-          <Shadow distance={10} radius={20} viewStyle={{width: '100%'}}>
+          <Shadow distance={10} style={{width: '100%', borderRadius: 20}}>
             <View
               style={[
                 styles.newExpenseHeaderView,
@@ -223,7 +222,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
                 onFocus={() => setAmountInputBorder({borderWidth: 1})}
                 onBlur={() => setAmountInputBorder({borderWidth: 0.5})}
               />
-              <Shadow distance={10} radius={0} viewStyle={{width: '100%'}}>
+              <Shadow distance={10} style={{width: '100%', borderRadius: 0}}>
                 <Pressable
                   onPress={() => createExpense(categoryInput, amountInput)}
                   style={({pressed}) => [

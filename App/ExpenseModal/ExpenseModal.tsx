@@ -270,9 +270,8 @@ const ExpenseModal: React.FC<Props> = ({
       <View style={styles.centeredView}>
         <Shadow
           distance={15}
-          radius={20}
-          viewStyle={styles.modalView}
-          containerViewStyle={styles.modalShadowContainer}>
+          style={styles.modalView}
+          containerStyle={styles.modalShadowContainer}>
           <View
             style={[styles.modalHeader, {backgroundColor: myTheme.primary}]}>
             <Text style={[styles.modalHeaderText, {color: myTheme.text}]}>
@@ -287,9 +286,8 @@ const ExpenseModal: React.FC<Props> = ({
               <View style={styles.calculatorRow}>
                 <Shadow
                   distance={10}
-                  radius={20}
-                  viewStyle={{width: '100%'}}
-                  containerViewStyle={styles.calculatorShadowContainer}>
+                  style={{width: '100%', borderRadius: 20}}
+                  containerStyle={styles.calculatorShadowContainer}>
                   <Pressable
                     style={({pressed}) =>
                       pressed
@@ -308,9 +306,8 @@ const ExpenseModal: React.FC<Props> = ({
                 </Shadow>
                 <Shadow
                   distance={10}
-                  radius={20}
-                  viewStyle={{width: '100%'}}
-                  containerViewStyle={styles.calculatorShadowContainer}>
+                  style={{width: '100%', borderRadius: 20}}
+                  containerStyle={styles.calculatorShadowContainer}>
                   <Pressable
                     style={({pressed}) =>
                       pressed
@@ -329,9 +326,8 @@ const ExpenseModal: React.FC<Props> = ({
                 </Shadow>
                 <Shadow
                   distance={10}
-                  radius={20}
-                  viewStyle={{width: '100%'}}
-                  containerViewStyle={styles.calculatorShadowContainer}>
+                  style={{width: '100%', borderRadius: 20}}
+                  containerStyle={styles.calculatorShadowContainer}>
                   <Pressable
                     style={({pressed}) =>
                       pressed
@@ -350,9 +346,8 @@ const ExpenseModal: React.FC<Props> = ({
                 </Shadow>
                 <Shadow
                   distance={10}
-                  radius={20}
-                  viewStyle={{width: '100%'}}
-                  containerViewStyle={styles.calculatorShadowContainer}>
+                  style={{width: '100%', borderRadius: 20}}
+                  containerStyle={styles.calculatorShadowContainer}>
                   <Pressable
                     style={({pressed}) =>
                       pressed
@@ -373,9 +368,8 @@ const ExpenseModal: React.FC<Props> = ({
               <View style={styles.calculatorRow}>
                 <Shadow
                   distance={10}
-                  radius={20}
-                  viewStyle={{width: '100%'}}
-                  containerViewStyle={styles.calculatorShadowContainer}>
+                  style={{width: '100%', borderRadius: 20}}
+                  containerStyle={styles.calculatorShadowContainer}>
                   <Pressable
                     style={({pressed}) =>
                       pressed
@@ -394,9 +388,8 @@ const ExpenseModal: React.FC<Props> = ({
                 </Shadow>
                 <Shadow
                   distance={10}
-                  radius={20}
-                  viewStyle={{width: '100%'}}
-                  containerViewStyle={styles.calculatorShadowContainer}>
+                  style={{width: '100%', borderRadius: 20}}
+                  containerStyle={styles.calculatorShadowContainer}>
                   <Pressable
                     style={({pressed}) =>
                       pressed
@@ -415,9 +408,8 @@ const ExpenseModal: React.FC<Props> = ({
                 </Shadow>
                 <Shadow
                   distance={10}
-                  radius={20}
-                  viewStyle={{width: '100%'}}
-                  containerViewStyle={styles.calculatorShadowContainer}>
+                  style={{width: '100%', borderRadius: 20}}
+                  containerStyle={styles.calculatorShadowContainer}>
                   <Pressable
                     style={({pressed}) =>
                       pressed
@@ -436,9 +428,8 @@ const ExpenseModal: React.FC<Props> = ({
                 </Shadow>
                 <Shadow
                   distance={10}
-                  radius={20}
-                  viewStyle={{width: '100%'}}
-                  containerViewStyle={styles.calculatorShadowContainer}>
+                  style={{width: '100%', borderRadius: 20}}
+                  containerStyle={styles.calculatorShadowContainer}>
                   <Pressable
                     style={({pressed}) =>
                       pressed
@@ -459,9 +450,8 @@ const ExpenseModal: React.FC<Props> = ({
               <View style={styles.calculatorRow}>
                 <Shadow
                   distance={10}
-                  radius={20}
-                  viewStyle={{width: '100%'}}
-                  containerViewStyle={styles.calculatorShadowContainer}>
+                  style={{width: '100%', borderRadius: 20}}
+                  containerStyle={styles.calculatorShadowContainer}>
                   <Pressable
                     style={({pressed}) =>
                       pressed
@@ -480,9 +470,8 @@ const ExpenseModal: React.FC<Props> = ({
                 </Shadow>
                 <Shadow
                   distance={10}
-                  radius={20}
-                  viewStyle={{width: '100%'}}
-                  containerViewStyle={styles.calculatorShadowContainer}>
+                  style={{width: '100%', borderRadius: 20}}
+                  containerStyle={styles.calculatorShadowContainer}>
                   <Pressable
                     style={({pressed}) =>
                       pressed
@@ -501,9 +490,8 @@ const ExpenseModal: React.FC<Props> = ({
                 </Shadow>
                 <Shadow
                   distance={10}
-                  radius={20}
-                  viewStyle={{width: '100%'}}
-                  containerViewStyle={styles.calculatorShadowContainer}>
+                  style={{width: '100%', borderRadius: 20}}
+                  containerStyle={styles.calculatorShadowContainer}>
                   <Pressable
                     style={({pressed}) =>
                       pressed
@@ -522,9 +510,8 @@ const ExpenseModal: React.FC<Props> = ({
                 </Shadow>
                 <Shadow
                   distance={10}
-                  radius={20}
-                  viewStyle={{width: '100%'}}
-                  containerViewStyle={styles.calculatorShadowContainer}>
+                  style={{width: '100%', borderRadius: 20}}
+                  containerStyle={styles.calculatorShadowContainer}>
                   <Pressable
                     style={({pressed}) =>
                       pressed
@@ -545,9 +532,8 @@ const ExpenseModal: React.FC<Props> = ({
               <View style={styles.calculatorRow}>
                 <Shadow
                   distance={10}
-                  radius={20}
-                  viewStyle={{width: '100%'}}
-                  containerViewStyle={styles.calculatorShadowContainer}>
+                  style={{width: '100%', borderRadius: 20}}
+                  containerStyle={styles.calculatorShadowContainer}>
                   <Pressable
                     style={({pressed}) =>
                       pressed
@@ -569,9 +555,8 @@ const ExpenseModal: React.FC<Props> = ({
                 </Shadow>
                 <Shadow
                   distance={10}
-                  radius={20}
-                  viewStyle={{width: '100%'}}
-                  containerViewStyle={styles.calculatorShadowContainer}>
+                  style={{width: '100%', borderRadius: 20}}
+                  containerStyle={styles.calculatorShadowContainer}>
                   <Pressable
                     style={({pressed}) =>
                       pressed
@@ -590,9 +575,8 @@ const ExpenseModal: React.FC<Props> = ({
                 </Shadow>
                 <Shadow
                   distance={10}
-                  radius={20}
-                  viewStyle={{width: '100%'}}
-                  containerViewStyle={styles.calculatorShadowContainer}>
+                  style={{width: '100%', borderRadius: 20}}
+                  containerStyle={styles.calculatorShadowContainer}>
                   <Pressable
                     style={({pressed}) =>
                       pressed
@@ -611,9 +595,8 @@ const ExpenseModal: React.FC<Props> = ({
                 </Shadow>
                 <Shadow
                   distance={10}
-                  radius={20}
-                  viewStyle={{width: '100%'}}
-                  containerViewStyle={styles.calculatorShadowContainer}>
+                  style={{width: '100%', borderRadius: 20}}
+                  containerStyle={styles.calculatorShadowContainer}>
                   <Pressable
                     style={({pressed}) =>
                       pressed

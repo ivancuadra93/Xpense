@@ -56,10 +56,9 @@ const ExpenseList: React.FC<Props> = ({expense, setTotals}) => {
       />
       <Shadow
         distance={5}
-        startColor={myTheme.border}
-        radius={8}
-        viewStyle={{width: '100%'}}
-        containerViewStyle={styles.shadowContainer}>
+        startColor={myTheme.card}
+        style={{width: '100%', borderRadius: 8}}
+        containerStyle={styles.shadowContainer}>
         <Pressable
           style={({pressed}) =>
             pressed
