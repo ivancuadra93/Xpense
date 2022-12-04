@@ -6,7 +6,6 @@ import {
   SafeAreaView,
   Text,
   StyleSheet,
-  DeviceEventEmitter,
 } from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
@@ -23,13 +22,10 @@ import {StackParamsList} from '../Types';
 type Props = NativeStackScreenProps<StackParamsList, 'LoginScreen'>;
 
 const LoginScreen: React.FC<Props> = ({route, navigation}: Props) => {
-  const [userInfo, setUserInfo] = useState<User>();
   const [gettingLoginStatus, setGettingLoginStatus] = useState<boolean>(true);
 
   const myTheme = useTheme().colors;
   const isDarkMode = useTheme().dark;
-
-  DeviceEventEmitter.addListener('signOut', () => _signOut());
 
   useEffect(() => {
     // Initial configuration
@@ -57,20 +53,28 @@ const LoginScreen: React.FC<Props> = ({route, navigation}: Props) => {
     const isSignedIn = await GoogleSignin.isSignedIn();
     if (isSignedIn) {
       console.log('User is already signed in');
+
       // Set User Info if user is already signed in
       _getCurrentUserInfo();
+
       navigation.replace('HomeScreen', {welcomeMessage: ''});
     } else {
       console.log('Please Login');
     }
+
     setGettingLoginStatus(false);
   };
 
   const _getCurrentUserInfo = async () => {
     try {
-      let info: User = await GoogleSignin.signInSilently();
-      console.log('User Info --> ', info);
-      setUserInfo(info);
+      const userInfo: User = await GoogleSignin.signInSilently();
+      const googleCredential = auth.GoogleAuthProvider.credential(
+        userInfo.idToken,
+      );
+
+      auth().signInWithCredential(googleCredential);
+
+      console.log('User Info --> ', userInfo);
     } catch (error: any) {
       if (error.code === statusCodes.SIGN_IN_REQUIRED) {
         Alert.alert('User has not signed in yet');
@@ -91,7 +95,7 @@ const LoginScreen: React.FC<Props> = ({route, navigation}: Props) => {
         showPlayServicesUpdateDialog: true,
       });
 
-      const userInfo = await GoogleSignin.signIn();
+      const userInfo: User = await GoogleSignin.signIn();
       const googleCredential = auth.GoogleAuthProvider.credential(
         userInfo.idToken,
       );
@@ -99,7 +103,7 @@ const LoginScreen: React.FC<Props> = ({route, navigation}: Props) => {
       auth().signInWithCredential(googleCredential);
 
       console.log('User Info --> ', userInfo);
-      setUserInfo(userInfo);
+
       navigation.replace('HomeScreen', {welcomeMessage: ''});
     } catch (error: any) {
       console.log('Message', JSON.stringify(error));
@@ -116,22 +120,6 @@ const LoginScreen: React.FC<Props> = ({route, navigation}: Props) => {
     }
   };
 
-  const _signOut = async () => {
-    setGettingLoginStatus(true);
-    // Remove user session from the device.
-    try {
-      auth().signOut();
-      await GoogleSignin.revokeAccess();
-      await GoogleSignin.signOut();
-
-      // Removing user Info
-      setUserInfo(undefined);
-    } catch (error) {
-      console.error(error);
-    }
-    setGettingLoginStatus(false);
-  };
-
   if (gettingLoginStatus) {
     return (
       <View style={styles.container}>
@@ -146,20 +134,16 @@ const LoginScreen: React.FC<Props> = ({route, navigation}: Props) => {
             Google Sign-In
           </Text>
           <View style={styles.container}>
-            {userInfo ? (
-              <></>
-            ) : (
-              <GoogleSigninButton
-                style={{width: 312, height: 48}}
-                size={GoogleSigninButton.Size.Wide}
-                color={
-                  isDarkMode
-                    ? GoogleSigninButton.Color.Dark
-                    : GoogleSigninButton.Color.Light
-                }
-                onPress={_signIn}
-              />
-            )}
+            <GoogleSigninButton
+              style={{width: 312, height: 48}}
+              size={GoogleSigninButton.Size.Wide}
+              color={
+                isDarkMode
+                  ? GoogleSigninButton.Color.Dark
+                  : GoogleSigninButton.Color.Light
+              }
+              onPress={_signIn}
+            />
           </View>
         </View>
       </SafeAreaView>

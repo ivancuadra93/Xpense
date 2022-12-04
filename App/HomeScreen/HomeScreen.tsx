@@ -5,12 +5,10 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {
   Alert,
   Button,
-  DeviceEventEmitter,
   KeyboardAvoidingView,
   Platform,
   Pressable,
   SafeAreaView,
-  StatusBar,
   StyleSheet,
   Text,
   TextInput,
@@ -20,6 +18,7 @@ import {
 import {Shadow} from 'react-native-shadow-2';
 import {useUserContext} from '../contexts/UserContext';
 import ExpenseList from '../ExpenseList/ExpenseList';
+import {signOut} from '../firebase/auth';
 import {addExpense, getExpenses} from '../firebase/firestore';
 
 import {
@@ -115,7 +114,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
       sum += total;
     });
 
-    return sum;
+    return Number(sum.toFixed(2));
   }, [totals]);
 
   useEffect(() => {
@@ -127,7 +126,8 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
         <Button
           color={myTheme.card}
           onPress={() => {
-            DeviceEventEmitter.emit('signOut');
+            // DeviceEventEmitter.emit('signOut');
+            signOut();
             navigation.replace('LoginScreen', {welcomeMessage: ''});
           }}
           title="Sign Out"
@@ -169,7 +169,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
             keyExtractor={keyExtractor}
           />
           <View style={styles.totalView}>
-            <Text style={[styles.totalText, {color: myTheme.text}]}>
+            <Text selectable style={[styles.totalText, {color: myTheme.text}]}>
               Total: ${total}
             </Text>
           </View>
