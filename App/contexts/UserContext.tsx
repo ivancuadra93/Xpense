@@ -8,7 +8,7 @@ export const UserAuthProvider: React.FC<{children: any}> = ({children}) => {
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(setUser);
-    return subscriber();
+    return () => subscriber();
   }, []);
 
   return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
