@@ -51,6 +51,7 @@ const ExpenseList: React.FC<Props> = ({expense, setTotals}) => {
       <EditExpenseModal
         expense={expense}
         total={total}
+        setTotals={setTotals}
         editModalVisible={editModalVisible}
         setEditModalVisible={setEditModalVisible}
       />

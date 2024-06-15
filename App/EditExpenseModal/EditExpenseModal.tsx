@@ -17,6 +17,7 @@ import {Expense, FirestoreExpense} from '../Types';
 type Props = {
   expense: Expense;
   total: number;
+  setTotals: React.Dispatch<React.SetStateAction<Map<string, number>>>;
   editModalVisible: boolean;
   setEditModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -24,6 +25,7 @@ type Props = {
 const EditExpenseModal: React.FC<Props> = ({
   expense,
   total,
+  setTotals,
   editModalVisible,
   setEditModalVisible,
 }) => {
@@ -58,6 +60,11 @@ const EditExpenseModal: React.FC<Props> = ({
             deleteExpense(id)
               .then(res => {
                 console.log(res);
+                setTotals(map => {
+                  const newMap = new Map(map);
+                  newMap.delete(id);
+                  return newMap;
+                });
                 setEditModalVisible(false);
               })
               .catch(err => {
